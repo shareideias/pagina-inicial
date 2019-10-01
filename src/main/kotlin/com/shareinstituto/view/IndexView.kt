@@ -70,6 +70,7 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
                                 +" I am convenient because I require little markup to use effectively."
                             }
                         }
+                        div("card-action") { a("#") { +"Leia mais" } }
                     }
                 }
                 div("col s12 m6 xl4") {
@@ -82,6 +83,7 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
                                 +" I am convenient because I require little markup to use effectively."
                             }
                         }
+                        div("card-action") { a("#") { +"Leia mais" } }
                     }
                 }
                 div("col s12 xl4") {
@@ -95,6 +97,7 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
                             }
                         }
                     }
+                    div("card-action") { a("#") { +"Leia mais" } }
                 }
             }
             div("row") {
