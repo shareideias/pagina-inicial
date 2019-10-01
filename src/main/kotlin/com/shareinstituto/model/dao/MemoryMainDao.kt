@@ -15,7 +15,7 @@ class MemoryMainDao : MainDao {
     }
 
     override fun allLinks(): List<Link> {
-        return links.values.sortedBy { it.codigo }
+        return links.values.sortedBy { it.ordinal }
     }
 
     override fun removeLink(codigo: Int) {
@@ -23,7 +23,7 @@ class MemoryMainDao : MainDao {
     }
 
     override fun updateLink(link: Link) {
-        links[link.codigo] = link
+        links[link.ordinal] = link
     }
 
     val usuarios = LinkedHashMap<String, Usuario>()

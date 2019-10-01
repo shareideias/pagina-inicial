@@ -57,7 +57,72 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
     }
 
     private fun MAIN.main() {
+        div("container") {
+            h5("underlined") { +"Recente:" }
+            div("row") {
+                div("col s12 m6 xl4") {
+                    div("card") {
+                        div("card-content") {
+                            span("card-title") { +"Card Title" }
+                            p("par_news") {
+                                +"Id am a very simple card."
+                                +" I am good at containing small bits of information."
+                                +" I am convenient because I require little markup to use effectively."
+                            }
+                        }
+                    }
+                }
+                div("col s12 m6 xl4") {
+                    div("card") {
+                        div("card-content") {
+                            span("card-title") { +"Card Title" }
+                            p("par_news") {
+                                +"Id am a very simple card."
+                                +" I am good at containing small bits of information."
+                                +" I am convenient because I require little markup to use effectively."
+                            }
+                        }
+                    }
+                }
+                div("col s12 xl4") {
+                    div("card") {
+                        div("card-content") {
+                            span("card-title") { +"Card Title" }
+                            p("par_news") {
+                                +"Id am a very simple card."
+                                +" I am good at containing small bits of information."
+                                +" I am convenient because I require little markup to use effectively."
+                            }
+                        }
+                    }
+                }
+            }
+            div("row") {
+                div("col s12 xl8") {
+                    h5("underlined") { +"Notícias:" }
 
+                    for (i in 0..5) {
+                        article {
+                            h3 { +"Título da notícia" }
+                            p("noticia_info") { +"4 de Agosto de 2019 por William Santos" }
+                            p("par_news") {
+                                +"This is a sample news post for a cool website."
+                                +" This news is awesome and should brighten up your day."
+                            }
+                        }
+                    }
+                }
+                div("col s12 xl4") {
+                    h5("underlined") { +"Sobre nós:" }
+                    p("par_news") {
+                        +"A Share - Centro de Línguas é uma entidade estudantil da UFSCar - Campus Sorocaba que surgiu"
+                        +" no ano de 2017, com o intuito de disponibilizar o ensino de línguas para os alunos da"
+                        +" universidade. Atualmente, além de oferecermos diversos cursos de línguas ainda atuamos em outras"
+                        +" áreas (como dança e fotografia) e visamos sempre atingir novos objetivos."
+                    }
+                }
+            }
+        }
     }
 
     private fun FOOTER.footer() {

@@ -1,3 +1,3 @@
 package com.shareinstituto.model
 
-class Link(val codigo: Int, val nome: String, val href: String)
+class Link(val ordinal: Int, val nome: String, val href: String)
