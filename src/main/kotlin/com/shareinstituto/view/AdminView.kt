@@ -4,7 +4,6 @@ import com.shareinstituto.model.dao.MainDao
 import io.javalin.http.Context
 import kotlinx.html.*
 
-
 class AdminView(val dao: MainDao) : HtmlBuilderView() {
     override fun HTML.render(ctx: Context) {
         head {
@@ -12,6 +11,7 @@ class AdminView(val dao: MainDao) : HtmlBuilderView() {
             link(type = "text/css", rel = "stylesheet", href = "/css/materialize.min.css") {
                 media = "screen,projection"
             }
+            lin
 
             meta("viewport", "width=device-width, initial-scale=1.0")
             meta(charset = "utf-8")
