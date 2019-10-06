@@ -5,6 +5,7 @@ import com.shareinstituto.model.dao.MemoryMainDao
 import com.shareinstituto.view.AdminView
 import com.shareinstituto.view.IndexView
 import com.shareinstituto.view.LoginView
+import com.shareinstituto.view.ModeloView
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.EndpointGroup
 import io.javalin.http.Context
@@ -16,6 +17,7 @@ class MainController : EndpointGroup {
         get(::index)
         get("administracao", ::administracao)
         get("login", ::login)
+        get("modelo", ::modelo)
 
         //get("p/:page", ::page)
     }
@@ -31,6 +33,10 @@ class MainController : EndpointGroup {
 
     fun login(ctx: Context) {
         LoginView(dao).render(ctx)
+    }
+
+    fun modelo(ctx: Context) {
+        ModeloView(dao).render(ctx)
     }
     //fun page(ctx: Context) {
     //
