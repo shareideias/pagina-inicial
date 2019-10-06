@@ -30,7 +30,7 @@ class MainController : EndpointGroup {
     }
 
     fun login(ctx: Context) {
-        LoginView(dao).rend
+        LoginView(dao).render(ctx)
     }
     //fun page(ctx: Context) {
     //
