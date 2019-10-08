@@ -96,8 +96,8 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
                                 +" I am convenient because I require little markup to use effectively."
                             }
                         }
+                        div("card-action") { a("#") { +"Leia mais" } }
                     }
-                    div("card-action") { a("#") { +"Leia mais" } }
                 }
             }
             div("row") {

@@ -4,41 +4,41 @@ import com.shareinstituto.model.dao.MainDao
 import io.javalin.http.Context
 import kotlinx.html.*
 
-class ModeloView(val dao: MainDao) : HtmlBuilderView() {
+abstract class ModeloView(val dao: MainDao) : HtmlBuilderView() {
+    abstract val pageTitle: String
+    abstract val extraCss: List<String>
+
     override fun HTML.render(ctx: Context) {
         head {
-            link("https://fonts.googleapis.com/icon?family=Material+Icons", rel = "stylesheet")
-            link(type = "text/css", rel = "stylesheet", href = "/css/materialize.min.css") {
-                media = "screen,projection"
-            }
-
-            meta("viewport", "width=device-width, initial-scale=1.0")
             meta(charset = "utf-8")
+            meta("viewport", "width=device-width, initial-scale=1.0")
 
-            title("Share - Administração")
+            link("https://fonts.googleapis.com/icon?family=Material+Icons", "stylesheet")
+            link("/css/materialize.min.css", "stylesheet")
+            link("/css/modelo.css", "stylesheet")
 
-            link(rel = "icon", href = "/img/globo.png")
-            link(rel = "stylesheet", href = "/css/administração.css")
+            title("Share - $pageTitle")
+            link("/img/globo.png", "icon")
 
+            extraCss.forEach { link(it, "stylesheet") }
         }
         body {
             header { header() }
             main { main() }
-            footer(classes = "rodape_pag") { footer() }
+            footer("rodape_pag") { footer() }
             scripts()
         }
     }
 
     private fun HEADER.header() {
-        nav(classes = "nav-wrapper transparent") {
-            div(classes = "container") {
+        nav("nav-wrapper transparent") {
+            div("container") {
                 a(href = "index.html", classes = "brand-logo") {
                     img(classes = "imagem_logo", alt = "Logo da Share", src = "/img/globo.png")
                 }
                 a(href = "", classes = "sidenav-trigger") {
                     attributes["data-target"] = "mobile-menu"
                     i(classes = "material-icons") { +"menu" }
-
                 }
                 val links = dao.allLinks()
 
@@ -60,9 +60,7 @@ class ModeloView(val dao: MainDao) : HtmlBuilderView() {
 
     }
 
-    private fun MAIN.main() {
-    }
-
+    abstract fun MAIN.main()
 
     private fun FOOTER.footer() {
         ul(classes = "redes_sociais") {
