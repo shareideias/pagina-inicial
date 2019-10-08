@@ -7,6 +7,7 @@ import kotlinx.html.*
 abstract class ModeloView(val dao: MainDao) : HtmlBuilderView() {
     abstract val pageTitle: String
     abstract val extraCss: List<String>
+    abstract val mainPage: String
 
     override fun HTML.render(ctx: Context) {
         head {
@@ -24,7 +25,7 @@ abstract class ModeloView(val dao: MainDao) : HtmlBuilderView() {
         }
         body {
             header { header() }
-            main { main() }
+            main { main(ctx) }
             footer("rodape_pag") { footer() }
             scripts()
         }
@@ -33,7 +34,7 @@ abstract class ModeloView(val dao: MainDao) : HtmlBuilderView() {
     private fun HEADER.header() {
         nav("nav-wrapper transparent") {
             div("container") {
-                a(href = "index.html", classes = "brand-logo") {
+                a(href = mainPage, classes = "brand-logo") {
                     img(classes = "imagem_logo", alt = "Logo da Share", src = "/img/globo.png")
                 }
                 a(href = "", classes = "sidenav-trigger") {
@@ -60,7 +61,7 @@ abstract class ModeloView(val dao: MainDao) : HtmlBuilderView() {
 
     }
 
-    abstract fun MAIN.main()
+    abstract fun MAIN.main(ctx: Context)
 
     private fun FOOTER.footer() {
         ul(classes = "redes_sociais") {

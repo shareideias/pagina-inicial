@@ -1,13 +1,15 @@
 package com.shareinstituto.view
 
 import com.shareinstituto.model.dao.MainDao
+import io.javalin.http.Context
 import kotlinx.html.*
 
 class AdminView(dao: MainDao) : ModeloView(dao) {
     override val pageTitle = "Administração"
     override val extraCss = listOf("/css/administração.css")
+    override val mainPage = "/admin"
 
-    override fun MAIN.main() {
+    override fun MAIN.main(ctx: Context) {
         h2("Administração")
 
         div(classes = "container") {
