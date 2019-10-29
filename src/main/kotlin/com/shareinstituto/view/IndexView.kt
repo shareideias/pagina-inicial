@@ -63,11 +63,10 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
                 div("col s12 m6 xl4") {
                     div("card") {
                         div("card-content") {
-                            span("card-title") { +"Card Title" }
+                            span("card-title") { +"Título da notícia" }
                             p("par_news") {
-                                +"Id am a very simple card."
-                                +" I am good at containing small bits of information."
-                                +" I am convenient because I require little markup to use effectively."
+                                +"This is a sample news post for a cool website."
+                                +" This news is awesome and should brighten up your day."
                             }
                         }
                         div("card-action") { a("#") { +"Leia mais" } }
@@ -76,11 +75,10 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
                 div("col s12 m6 xl4") {
                     div("card") {
                         div("card-content") {
-                            span("card-title") { +"Card Title" }
+                            span("card-title") { +"Título da notícia" }
                             p("par_news") {
-                                +"Id am a very simple card."
-                                +" I am good at containing small bits of information."
-                                +" I am convenient because I require little markup to use effectively."
+                                +"This is a sample news post for a cool website."
+                                +" This news is awesome and should brighten up your day."
                             }
                         }
                         div("card-action") { a("#") { +"Leia mais" } }
@@ -89,11 +87,10 @@ class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
                 div("col s12 xl4") {
                     div("card") {
                         div("card-content") {
-                            span("card-title") { +"Card Title" }
+                            span("card-title") { +"Título da notícia" }
                             p("par_news") {
-                                +"Id am a very simple card."
-                                +" I am good at containing small bits of information."
-                                +" I am convenient because I require little markup to use effectively."
+                                +"This is a sample news post for a cool website."
+                                +" This news is awesome and should brighten up your day."
                             }
                         }
                         div("card-action") { a("#") { +"Leia mais" } }
