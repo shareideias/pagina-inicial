@@ -1,10 +1,10 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.dao.MainDao
+import com.shareinstituto.model.dao.DataAccessObject
 import io.javalin.http.Context
 import kotlinx.html.*
 
-class LoginView(dao: MainDao) : ModeloView(dao) {
+class LoginView(dao: DataAccessObject) : ModeloView(dao) {
     override val pageTitle = "Login"
     override val extraCss = listOf("/css/login.css")
     override val mainPage = "/"

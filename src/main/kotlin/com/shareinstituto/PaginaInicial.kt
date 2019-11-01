@@ -4,12 +4,10 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.shareinstituto.controller.security.ShareAccessManager
-import com.shareinstituto.model.Usuario
-import com.shareinstituto.model.dao.MainDao
-import com.shareinstituto.model.dao.MemoryMainDao
+import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.dao.JdbiDataAccessObject
 import io.javalin.Javalin
 import org.kodein.di.Kodein
-import org.kodein.di.direct
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
@@ -19,7 +17,7 @@ fun main() {
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
 
     val kodein = Kodein {
-        bind<MainDao>() with singleton { MemoryMainDao() }
+        bind<DataAccessObject>() with singleton { JdbiDataAccessObject("jdbc:postgresql:shareideias") }
         bind<Algorithm>() with provider {
             Algorithm.HMAC256(System.getenv("secret") ?: "shareinstituto_is_very_secret")
         }
@@ -29,10 +27,6 @@ fun main() {
                 .build()
         }
     }
-
-    kodein.direct.instance<MainDao>().updateUsuario(Usuario(
-            "admin", "admin", "admin"
-    ))
 
     val app = Javalin.create { cfg ->
         cfg.accessManager(ShareAccessManager())

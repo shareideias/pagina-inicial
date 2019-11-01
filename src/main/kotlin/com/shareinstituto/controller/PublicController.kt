@@ -1,6 +1,6 @@
 package com.shareinstituto.controller
 
-import com.shareinstituto.model.dao.MainDao
+import com.shareinstituto.model.dao.DataAccessObject
 import com.shareinstituto.view.IndexView
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.EndpointGroup
@@ -10,7 +10,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 
 class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware {
-    val dao: MainDao by instance()
+    val dao: DataAccessObject by instance()
 
     override fun addEndpoints() {
         get(::index)

@@ -1,10 +1,10 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.dao.MainDao
+import com.shareinstituto.model.dao.DataAccessObject
 import io.javalin.http.Context
 import kotlinx.html.*
 
-class IndexView(val pageNumber: Int, val dao: MainDao) : HtmlBuilderView() {
+class IndexView(val pageNumber: Int, val dao: DataAccessObject) : HtmlBuilderView() {
     override fun HTML.render(ctx: Context) {
         head {
             meta("viewport", "width=device-width, initial-scale=1.0")

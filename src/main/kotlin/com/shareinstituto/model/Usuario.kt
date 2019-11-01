@@ -1,11 +1,15 @@
 package com.shareinstituto.model
 
-import java.time.OffsetDateTime
+import com.shareinstituto.model.dao.DataAccessObject
 
 data class Usuario(
     var username: String,
-    var nome: String,
     var hash: String,
-    val dataCriacao: OffsetDateTime = OffsetDateTime.now()
-)
+    var pessoaId: Int,
+    var admin: Boolean
+) {
+    fun hashPassword(password: String) {
+        hash = DataAccessObject.hashPassword(password)
+    }
+}
 

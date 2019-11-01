@@ -4,8 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.shareinstituto.controller.security.MainRole
 import com.shareinstituto.model.Usuario
-import com.shareinstituto.model.dao.MainDao
-import com.shareinstituto.model.dao.MemoryMainDao
+import com.shareinstituto.model.dao.DataAccessObject
 import com.shareinstituto.view.LoginView
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.ApiBuilder.post
@@ -23,7 +22,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware {
-    val dao: MainDao = MemoryMainDao()
+    val dao: DataAccessObject by instance()
 
     override fun addEndpoints() {
         get("login", ::login)

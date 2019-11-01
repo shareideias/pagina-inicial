@@ -1,10 +1,10 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.dao.MainDao
+import com.shareinstituto.model.dao.DataAccessObject
 import io.javalin.http.Context
 import kotlinx.html.*
 
-abstract class ModeloView(val dao: MainDao) : HtmlBuilderView() {
+abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
     abstract val pageTitle: String
     abstract val extraCss: List<String>
     abstract val mainPage: String

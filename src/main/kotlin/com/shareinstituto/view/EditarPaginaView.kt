@@ -1,10 +1,10 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.dao.MainDao
+import com.shareinstituto.model.dao.DataAccessObject
 import io.javalin.http.Context
 import kotlinx.html.*
 
-class EditarPaginaView(dao: MainDao) : ModeloView(dao) {
+class EditarPaginaView(dao: DataAccessObject) : ModeloView(dao) {
     override val pageTitle = "Summernote Exemplo"
     override val extraCss = listOf("/css/administração.css")
     override val mainPage = "/admin"
