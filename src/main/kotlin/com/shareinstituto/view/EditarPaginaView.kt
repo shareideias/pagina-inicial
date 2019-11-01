@@ -4,7 +4,7 @@ import com.shareinstituto.model.dao.MainDao
 import io.javalin.http.Context
 import kotlinx.html.*
 
-class NoteView(dao: MainDao) : ModeloView(dao) {
+class EditarPaginaView(dao: MainDao) : ModeloView(dao) {
     override val pageTitle = "Summernote Exemplo"
     override val extraCss = listOf("/css/administração.css")
     override val mainPage = "/admin"

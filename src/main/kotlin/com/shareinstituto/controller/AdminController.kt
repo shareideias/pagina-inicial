@@ -4,7 +4,7 @@ import com.shareinstituto.controller.security.MainRole.ADMIN
 import com.shareinstituto.model.dao.MainDao
 import com.shareinstituto.model.dao.MemoryMainDao
 import com.shareinstituto.view.AdminView
-import com.shareinstituto.view.NoteView
+import com.shareinstituto.view.EditarPaginaView
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.EndpointGroup
 import io.javalin.core.security.SecurityUtil.roles
@@ -25,6 +25,6 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
     }
 
     fun note(ctx: Context) {
-        NoteView(dao).render(ctx)
+        EditarPaginaView(dao).render(ctx)
     }
 }
