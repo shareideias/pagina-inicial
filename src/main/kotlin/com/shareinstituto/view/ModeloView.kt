@@ -17,7 +17,7 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
             link("https://fonts.googleapis.com/icon?family=Material+Icons", "stylesheet")
             link("/css/materialize.min.css", "stylesheet")
             link("/css/modelo.css", "stylesheet")
-
+            script(src = "https://code.jquery.com/jquery-3.4.1.min.js") {}
             title("Share - $pageTitle")
             link("/img/globo.png", "icon")
 
