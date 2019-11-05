@@ -3,6 +3,7 @@ package com.shareinstituto.view
 import com.shareinstituto.model.dao.DataAccessObject
 import io.javalin.http.Context
 import kotlinx.html.*
+import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
 
 class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
     override val pageTitle = "Administração"
@@ -13,17 +14,19 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
         h5 { +"Notícias" }
 
         ul(classes = "collection") {
-            a("/newLink", classes = "collection-item") { +"Nova Notícia" }
+            a("/novaNoticia", classes = "collection-item") { +"Nova Notícia" }
 
-            for (link in dao.allLinks()) {
+            for (noticia in dao.allNoticias()) {
                 li(classes = "collection-item avatar") {
                     i(classes = "material-icons circle") { +"receipt" }
-                    span(classes = "title") { +link.nome }
+                    span(classes = "title") { +noticia.titulo }
                     p {
-                        +"Aponta para "
-                        code("blue lighten-5") { a(href = link.href) { +link.href } }
+                        +"Criado por "
+                        +(dao.getPessoa(noticia.criadoPorPessoa)?.nome ?: "Usuário Removido")
+                        +" em "
+                        b { +RFC_1123_DATE_TIME.format(noticia.dataCriacao) }
                     }
-                    a(href = "/editLink/${link.ordinal}", classes = "secondary-content") {
+                    a(href = "/editNoticia/${noticia.id}", classes = "secondary-content") {
                         i(classes = "material-icons") { +"edit" }
                     }
                 }
@@ -34,13 +37,35 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
 
     private fun DIV.collumn2() {
 
+        h5 { +"Páginas" }
+
+        ul(classes = "collection") {
+            a("/novaPagina", classes = "collection-item") { +"Nova Página" }
+
+            for (pagina in dao.allPaginas()) {
+                li(classes = "collection-item avatar") {
+                    i(classes = "material-icons circle") { +"web" }
+                    span(classes = "title") { +pagina.titulo }
+                    p {
+                        +"Criado por "
+                        +(dao.getPessoa(pagina.criadoPorPessoa)?.nome ?: "Usuário Removido")
+                        +" em "
+                        b { +RFC_1123_DATE_TIME.format(pagina.dataCriacao) }
+                    }
+                    a(href = "/editPagina/${pagina.linkPagina}", classes = "secondary-content") {
+                        i(classes = "material-icons") { +"edit" }
+                    }
+                }
+            }
+        }
+
     }
 
     private fun DIV.collumn3() {
         h5 { +"Links" }
 
         ul(classes = "collection") {
-            a("/newLink", classes = "collection-item") { +"Novo Link" }
+            a("/novoLink", classes = "collection-item") { +"Novo Link" }
 
             for (link in dao.allLinks()) {
                 li(classes = "collection-item avatar") {
@@ -72,71 +97,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
 
         div(classes = "container") {
             div(classes = "row") {
-                div(classes = "col 14 m6 s12") {
-
-                    h3(classes = "news_title") {
-                        +"Notícias"
-                    }
-                    ul(classes = "collection") {
-                        li(classes = "collection-item avatar") {
-                            i(classes = "material-icons circle") {
-                                +"receipt"
-                            }
-                            span(classes = "title") {
-                                +"Notícia 1"
-                            }
-                            p { +"Text" }
-                            a(href = "#!", classes = "secondary-content") {
-                                i(classes = "material-icons") {
-                                    +"edit"
-                                }
-                            }
-                        }
-                        li(classes = "collection-item avatar") {
-                            i(classes = "material-icons circle") {
-                                +"receipt"
-                            }
-                            span(classes = "title") {
-                                +"Notícia 2"
-                            }
-                            p { +"Text" }
-                            a(href = "#!", classes = "secondary-content") {
-                                i(classes = "material-icons") {
-                                    +"edit"
-                                }
-                            }
-                        }
-                        li(classes = "collection-item avatar") {
-                            i(classes = "material-icons circle") {
-                                +"receipt"
-                            }
-                            span(classes = "title") {
-                                +"Notícia 3"
-                            }
-                            p { +"Text" }
-                            a(href = "#!", classes = "secondary-content") {
-                                i(classes = "material-icons") {
-                                    +"edit"
-                                }
-                            }
-                        }
-                        li(classes = "collection-item avatar") {
-                            i(classes = "material-icons circle") {
-                                +"receipt"
-                            }
-                            span(classes = "title") {
-                                +"Notícia 4"
-                            }
-                            p { +"Text" }
-                            a(href = "#!", classes = "secondary-content") {
-                                i(classes = "material-icons") {
-                                    +"edit"
-                                }
-                            }
-                        }
-                    }
-                }
-
                 div(classes = "col 14 m6 s12") {
                     h3(classes = "news_title") {
                         +"Páginas"

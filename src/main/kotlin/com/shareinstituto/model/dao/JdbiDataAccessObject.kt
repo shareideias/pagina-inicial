@@ -132,7 +132,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
             it.createQuery("SELECT * FROM pagini_usuario")
                 .mapTo<Usuario>()
                 .list()
-        }
+        }.sortedBy { it.username }
     }
 
     override fun allPessoas(): List<Pessoa> {
@@ -140,7 +140,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
             it.createQuery("SELECT * FROM pagini_pessoa")
                 .mapTo<Pessoa>()
                 .list()
-        }
+        }.sortedBy { it.nome }
     }
 
     override fun allNoticias(): List<Noticia> {
@@ -148,7 +148,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
             it.createQuery("SELECT * FROM pagini_noticia")
                 .mapTo<Noticia>()
                 .list()
-        }
+        }.sortedByDescending { it.dataCriacao }
     }
 
     override fun allPaginas(): List<Pagina> {
@@ -156,7 +156,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
             it.createQuery("SELECT * FROM pagini_pagina")
                 .mapTo<Pagina>()
                 .list()
-        }
+        }.sortedByDescending { it.dataCriacao }
     }
 
     override fun allLinks(): List<Link> {
@@ -164,7 +164,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
             it.createQuery("SELECT * FROM pagini_link")
                 .mapTo<Link>()
                 .list()
-        }
+        }.sortedBy { it.ordinal }
     }
 
     override fun insertUsuario(username: String, password: String, pessoaId: Int, admin: Boolean): Usuario {
