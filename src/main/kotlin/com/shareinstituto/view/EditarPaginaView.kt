@@ -33,7 +33,7 @@ class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
                             +"Link da página"
                         }
                         input(type = InputType.text, classes = "validate") {
-                            placeholder = "/link_da_pagina"
+                            placeholder = "link_da_pagina"
                             id = "inputLink"
                             name = "linkPagina"
                         }
@@ -43,7 +43,7 @@ class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
                         label {
                             +"Corpo da página"
                         }
-                        textArea {
+                        textArea(classes = "materialize-textarea") {
                             id = "summernote"
                             name = "html"
                         }

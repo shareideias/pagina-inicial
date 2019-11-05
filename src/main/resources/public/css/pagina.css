@@ -16,29 +16,8 @@
 }
 
 /*Montefusco*/
-header {
-    /*background-image: linear-gradient(to right, #81F781, #81BEF7, #F781F3);*/ /*verde azul rosa*/
-    background-image: linear-gradient(to right, #81BEF7, #F78181, #F781F3); /*azul vermelho rosa*/
-    background-size: cover;
-    background-position: center;
-    height: 350px;
-}
-
-.imagem_logo {
-    height: 65px;
-    padding: .1em;
-}
-
-.manuscrito_logo {
-    height: 13em;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 2.8em;
-}
-
 h3 {
-    margin: 0.0rem 0 1.168rem 0;
+    margin: 1rem 0 1.168rem 0;
 }
 
 .card-action {

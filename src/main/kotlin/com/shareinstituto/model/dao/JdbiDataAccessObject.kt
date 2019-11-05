@@ -67,7 +67,17 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 """.trimIndent())
 
             if (it.createQuery("SELECT COUNT(id) FROM pagini_pessoa").mapTo<Int>().one() < 1) {
-                insertUsuario("admin", "admin", insertPessoa("Administrador PágIni").id, true)
+                val adminId = insertPessoa("Administrador PágIni").id
+                insertUsuario("admin", "admin", adminId, true)
+                insertNoticia("Bem-vindo a Share!", """
+                    <p align="justify">Seja bem-vindo ao site da Associação Share!<br></p>
+                    <p class="par_news" align="justify">A Share é uma Entidade Estudantil fundada em 2016 por alunos de
+                    Ciências Econômicas na UFSCar - Campus Sorocaba, com o intuito de conectar a vontade de ensinar com
+                    a vontade de aprender. Para isso oferecemos semestralmente cursos de idioma, culturais e
+                    administrativos, além de eventos, tudo isso de forma acessível e com certificado. Contamos com
+                    professores voluntários e 7 áreas administrativas voluntárias dos quais ajudam a fazer o
+                    projeto acontecer e crescer.</p><p class="par_news" align="justify">
+                    <i>Essa notícia foi automaticamente criada pelo sistema.<br></i></p>""".trimIndent(), adminId)
             }
 
             if (it.createQuery("SELECT COUNT(ordinal) FROM pagini_link").mapTo<Int>().one() < 1) {

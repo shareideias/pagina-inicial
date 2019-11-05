@@ -27,6 +27,7 @@ dependencies {
     compile("org.jdbi:jdbi3-json:3.10.1")
     compile("org.jdbi:jdbi3-jackson2:3.10.1")
     compile("com.fasterxml.jackson.core:jackson-databind:2.10.0")
+    compile("org.jsoup:jsoup:1.12.1")
     compile("org.postgresql:postgresql:42.2.8")
 }
 

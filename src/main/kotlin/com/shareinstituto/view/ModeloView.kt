@@ -6,7 +6,7 @@ import kotlinx.html.*
 
 abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
     abstract val pageTitle: String
-    abstract val extraCss: List<String>
+    open val extraCss: List<String> = emptyList()
     abstract val mainPage: String
 
     override fun HTML.render(ctx: Context) {
@@ -18,7 +18,7 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
             link("/css/materialize.min.css", "stylesheet")
             link("/css/modelo.css", "stylesheet")
             extraLinks()
-            title("Share - $pageTitle")
+            title("Associação Share · $pageTitle")
             link("/img/globo.png", "icon")
 
             extraCss.forEach { link(it, "stylesheet") }

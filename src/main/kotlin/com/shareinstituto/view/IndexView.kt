@@ -1,8 +1,11 @@
 package com.shareinstituto.view
 
+import com.shareinstituto.model.Noticia
 import com.shareinstituto.model.dao.DataAccessObject
 import io.javalin.http.Context
 import kotlinx.html.*
+import org.jsoup.Jsoup
+import java.time.format.DateTimeFormatter
 
 class IndexView(val pageNumber: Int, val dao: DataAccessObject) : HtmlBuilderView() {
     override fun HTML.render(ctx: Context) {
@@ -56,58 +59,84 @@ class IndexView(val pageNumber: Int, val dao: DataAccessObject) : HtmlBuilderVie
         img(classes = "manuscrito_logo", alt = "Manuscrito da Share", src = "/img/share-fonte.png")
     }
 
+    private fun DIV.renderCards(lastNoticias: List<Noticia>) {
+        when (lastNoticias.size) {
+            1 -> {
+                div("col s12") { renderCard(lastNoticias[0]) }
+            }
+            2 -> {
+                div("col s12 m6") { renderCard(lastNoticias[0]) }
+                div("col s12 m6") { renderCard(lastNoticias[1]) }
+            }
+            3 -> {
+                div("col s12 m6 xl4") { renderCard(lastNoticias[0]) }
+                div("col s12 m6 xl4") { renderCard(lastNoticias[1]) }
+                div("col s12 xl4") { renderCard(lastNoticias[2]) }
+            }
+        }
+    }
+
+    val compressRegex = Regex("\\s+")
+    fun String.compressSpaces(): String {
+        return replace(compressRegex, " ").trim()
+    }
+
+    fun String.limit(size: Int): String {
+        return if (length <= size) this else substring(0, lastIndexOf(' ', size)).trim() + "..."
+    }
+
+    private fun DIV.renderCard(noticia: Noticia) {
+        div("card") {
+            div("card-content") {
+                span("card-title") { +noticia.titulo }
+                p("par_news") {
+                    +Jsoup.parseBodyFragment(noticia.html, "/").text().compressSpaces().limit(280)
+                }
+            }
+            div("card-action") { a("/n/${noticia.id}") { +"Leia mais" } }
+        }
+    }
+
     private fun MAIN.main() {
         div("container") {
-            h5("underlined") { +"Recente:" }
-            div("row") {
-                div("col s12 m6 xl4") {
-                    div("card") {
-                        div("card-content") {
-                            span("card-title") { +"Título da notícia" }
-                            p("par_news") {
-                                +"This is a sample news post for a cool website."
-                                +" This news is awesome and should brighten up your day."
-                            }
-                        }
-                        div("card-action") { a("#") { +"Leia mais" } }
-                    }
-                }
-                div("col s12 m6 xl4") {
-                    div("card") {
-                        div("card-content") {
-                            span("card-title") { +"Título da notícia" }
-                            p("par_news") {
-                                +"This is a sample news post for a cool website."
-                                +" This news is awesome and should brighten up your day."
-                            }
-                        }
-                        div("card-action") { a("#") { +"Leia mais" } }
-                    }
-                }
-                div("col s12 xl4") {
-                    div("card") {
-                        div("card-content") {
-                            span("card-title") { +"Título da notícia" }
-                            p("par_news") {
-                                +"This is a sample news post for a cool website."
-                                +" This news is awesome and should brighten up your day."
-                            }
-                        }
-                        div("card-action") { a("#") { +"Leia mais" } }
-                    }
+            val lastNoticias = dao.paginateNoticias(0).take(3)
+            if (lastNoticias.isNotEmpty()) {
+                h5("underlined") { +"Recente:" }
+                div("row") {
+                    renderCards(lastNoticias)
                 }
             }
             div("row") {
                 div("col s12 xl8") {
                     h5("underlined") { +"Notícias:" }
 
-                    for (i in 0..5) {
-                        article {
-                            h3 { +"Título da notícia" }
-                            p("noticia_info") { +"4 de Agosto de 2019 por William Santos" }
-                            p("par_news") {
-                                +"This is a sample news post for a cool website."
-                                +" This news is awesome and should brighten up your day."
+                    val noticias = dao.paginateNoticias(pageNumber)
+                    if (noticias.isNotEmpty()) {
+                        for (noticia in noticias) {
+                            article {
+                                h3 { +noticia.titulo }
+                                p("noticia_info") {
+                                    a("/n/${noticia.id}") {
+                                        +DateTimeFormatter.RFC_1123_DATE_TIME.format(noticia.dataCriacao)
+                                        +" por "
+                                        +(dao.getPessoa(noticia.criadoPorPessoa)?.nome ?: "Usuário removido")
+                                    }
+                                }
+                                div("par_news") {
+                                    unsafe { +noticia.html }
+                                }
+                            }
+                        }
+                    } else {
+                        p("blue-grey-text lighten-3 center-align") {
+                            i {
+                                if (pageNumber == 0) {
+                                    +"O site não tem nenhuma notícia. Elas serão mostradas aqui."
+                                } else {
+                                    +"Essa página não contém notícias. Por favor, "
+                                    a("/") { +"volte a página inicial" }
+                                    +"."
+                                }
                             }
                         }
                     }
@@ -115,10 +144,12 @@ class IndexView(val pageNumber: Int, val dao: DataAccessObject) : HtmlBuilderVie
                 div("col s12 xl4") {
                     h5("underlined") { +"Sobre nós:" }
                     p("par_news") {
-                        +"A Share - Centro de Línguas é uma entidade estudantil da UFSCar - Campus Sorocaba que surgiu"
-                        +" no ano de 2017, com o intuito de disponibilizar o ensino de línguas para os alunos da"
-                        +" universidade. Atualmente, além de oferecermos diversos cursos de línguas ainda atuamos em outras"
-                        +" áreas (como dança e fotografia) e visamos sempre atingir novos objetivos."
+                        +"A Share é uma Entidade Estudantil fundada em 2016 por alunos de Ciências Econômicas na"
+                        +" UFSCar - Campus Sorocaba, com o intuito de conectar a vontade de ensinar com a vontade de aprender."
+                        +" Para isso oferecemos semestralmente cursos de idioma, culturais e administrativos, além de eventos,"
+                        +" tudo isso de forma acessível e com certificado."
+                        +" Contamos com professores voluntários e 7 áreas administrativas voluntárias"
+                        +" dos quais ajudam a fazer o projeto acontecer e crescer."
                     }
                 }
             }
@@ -141,7 +172,7 @@ class IndexView(val pageNumber: Int, val dao: DataAccessObject) : HtmlBuilderVie
                 +"""
                     document.addEventListener('DOMContentLoaded', function() {
                         var elems = document.querySelectorAll('.sidenav');
-                        var instances = M.Sidenav.init(elems, options);
+                        var instances = M.Sidenav.init(elems, {});
                     });
                 """.trimIndent()
             }

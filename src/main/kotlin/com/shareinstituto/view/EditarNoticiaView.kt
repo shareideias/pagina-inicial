@@ -31,7 +31,7 @@ class EditarNoticiaView(dao: DataAccessObject) : AdminModeloView(dao) {
                         label {
                             +"Corpo da página"
                         }
-                        textArea {
+                        textArea(classes ="materialize-textarea") {
                             id = "summernote"
                             name = "html"
                         }
