@@ -23,7 +23,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     nome TEXT NOT NULL,
                     dataCriacao TIMESTAMP NOT NULL DEFAULT NOW
                 )
-            """.trimIndent())
+                """.trimIndent())
 
             it.execute("""
                 CREATE TABLE IF NOT EXISTS pagini_usuario(
@@ -32,7 +32,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     pessoaId INT REFERENCES pessoa(id) ON DELETE CASCADE,
                     admin BOOLEAN DEFAULT FALSE
                 )
-            """.trimIndent())
+                """.trimIndent())
 
             it.execute("""
                 CREATE TABLE IF NOT EXISTS pagini_noticia(
@@ -44,7 +44,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     dataModificacao TIMESTAMP,
                     ultimaModificacaoPorPessoa INT REFERENCES pessoa(id) ON DELETE CASCADE
                 )
-            """.trimIndent())
+                """.trimIndent())
 
             it.execute("""
                 CREATE TABLE IF NOT EXISTS pagini_pagina(
@@ -56,7 +56,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     dataModificacao TIMESTAMP,
                     ultimaModificacaoPorPessoa INT REFERENCES pessoa(id) ON DELETE CASCADE
                 )
-            """.trimIndent())
+                """.trimIndent())
 
             it.execute("""
                 CREATE TABLE IF NOT EXISTS pagini_link(
@@ -64,7 +64,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     nome TEXT NOT NULL,
                     link TEXT NOT NULL
                 )
-            """.trimIndent())
+                """.trimIndent())
 
             if (it.createQuery("SELECT COUNT(username) FROM pagini_pessoa").mapTo<Int>().one() < 1) {
                 insertUsuario("admin", hashPassword("admin"), insertPessoa("Administrador PágIni").id, true)
@@ -78,7 +78,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("id", id)
                 .mapTo<Pessoa>()
                 .findOne()
-                .get()
+                .orElse(null)
         }
     }
 
@@ -88,7 +88,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("username", username)
                 .mapTo<Usuario>()
                 .findOne()
-                .get()
+                .orElse(null)
         }
     }
 
@@ -98,7 +98,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("id", codigo)
                 .mapTo<Noticia>()
                 .findOne()
-                .get()
+                .orElse(null)
         }
     }
 
@@ -108,7 +108,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("link", link)
                 .mapTo<Pagina>()
                 .findOne()
-                .get()
+                .orElse(null)
         }
     }
 
@@ -118,7 +118,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("ordinal", ordinal)
                 .mapTo<Link>()
                 .findOne()
-                .get()
+                .orElse(null)
         }
     }
 
@@ -166,8 +166,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("nome", nome)
                 .executeAndReturnGeneratedKeys()
                 .mapTo<Int>()
-                .findOne()
-                .get()
+                .one()
         }
 
         return Pessoa(id, nome)
@@ -181,8 +180,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("u", criadoPorPessoa)
                 .executeAndReturnGeneratedKeys()
                 .mapTo<Int>()
-                .findOne()
-                .get()
+                .one()
         }
 
         return Noticia(id, titulo, html, criadoPorPessoa)
@@ -234,7 +232,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     nome = :nome,
                     dataCriacao = :dataCriacao
                 WHERE id = :id
-            """.trimIndent())
+                """.trimIndent())
                 .bindKotlin(pessoa)
                 .execute()
         }
@@ -251,7 +249,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     dataModificacao = :dataModificacao,
                     ultimaModificacaoPorPessoa = :ultimaModificacaoPorPessoa
                 WHERE id = :id
-            """.trimIndent())
+                """.trimIndent())
                 .bindKotlin(noticia)
                 .execute()
         }
@@ -268,7 +266,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     dataModificacao = :dataModificacao,
                     ultimaModificacaoPorPessoa = :ultimaModificacaoPorPessoa
                 WHERE linkPagina = :linkPagina
-            """.trimIndent())
+                """.trimIndent())
                 .bindKotlin(pagina)
                 .execute()
         }
