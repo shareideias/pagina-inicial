@@ -24,24 +24,25 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
             extraCss.forEach { link(it, "stylesheet") }
         }
         body {
-            header { header() }
-            main { main(ctx) }
-            footer("rodape_pag") { footer() }
+            header { renderHeader() }
+            main { renderMain(ctx) }
             scripts()
         }
     }
 
-    private fun HEADER.header() {
+    open fun links() = dao.allLinks()
+
+    private fun HEADER.renderHeader() {
         nav("nav-wrapper transparent") {
             div("container") {
                 a(href = mainPage, classes = "brand-logo") {
                     img(classes = "imagem_logo", alt = "Logo da Share", src = "/img/globo.png")
                 }
-                a(href = "", classes = "sidenav-trigger") {
+                a(href = "#", classes = "sidenav-trigger") {
                     attributes["data-target"] = "mobile-menu"
                     i(classes = "material-icons") { +"menu" }
                 }
-                val links = dao.allLinks()
+                val links = links()
 
                 ul(classes = "right hide-on-med-and-down") {
                     for (link in links) {
@@ -61,16 +62,7 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
 
     }
 
-    abstract fun MAIN.main(ctx: Context)
-
-    private fun FOOTER.footer() {
-        ul(classes = "redes_sociais") {
-            li { a("https://www.facebook.com/shareideias/", classes = "facebook") { +"Facebook" } }
-            li { a("https://www.instagram.com/shareideias/", classes = "instagram") { +"Instagram" } }
-            li { a("https://www.linkedin.com/in/shareideias/", classes = "linkedin") { +"LinkedIn" } }
-        }
-        p { +"© Share. Todos os direitos reservados." }
-    }
+    abstract fun MAIN.renderMain(ctx: Context)
 
     private fun BODY.scripts() {
         script(src = "/js/materialize.min.js") {}
@@ -79,7 +71,7 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
                 +"""
                     document.addEventListener('DOMContentLoaded', function() {
                         var elems = document.querySelectorAll('.sidenav');
-                        var instances = M.Sidenav.init(elems, options);
+                        var instances = M.Sidenav.init(elems, {}});
                     });
                 """.trimIndent()
             }

@@ -4,19 +4,46 @@ import com.shareinstituto.model.dao.DataAccessObject
 import io.javalin.http.Context
 import kotlinx.html.*
 
-class AdminView(dao: DataAccessObject) : ModeloView(dao) {
+class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
     override val pageTitle = "Administração"
     override val extraCss = listOf("/css/administração.css")
     override val mainPage = "/admin"
 
-    override fun MAIN.main(ctx: Context) {
+    private fun DIV.collumn1() {
+
+    }
+
+    private fun DIV.collumn2() {
+
+    }
+
+    private fun DIV.collumn3() {
+
+    }
+
+
+    override fun MAIN.renderMain(ctx: Context) {
         h2("Administração")
 
         div(classes = "container") {
             div(classes = "row") {
+                div("col s12 m4") {
+
+                }
+                div("col s12 m4") {
+
+                }
+                div("col s12 m4") {
+
+                }
+            }
+        }
+
+        div(classes = "container") {
+            div(classes = "row") {
                 div(classes = "col 14 m6 s12") {
-                    h3(classes = "news_title") {
-                        +"Recentes"
+                    h5(classes = "underlined") {
+                        +"Links"
                     }
                     ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
@@ -171,7 +198,7 @@ class AdminView(dao: DataAccessObject) : ModeloView(dao) {
                     ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
-                                +"folder"
+                                +"web"
                             }
                             span(classes = "title") {
                                 +"Institucional"
@@ -188,7 +215,7 @@ class AdminView(dao: DataAccessObject) : ModeloView(dao) {
                     ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
-                                +"folder"
+                                +"web"
                             }
                             span(classes = "title") {
                                 +"Cursos"
@@ -205,7 +232,7 @@ class AdminView(dao: DataAccessObject) : ModeloView(dao) {
                     ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
-                                +"folder"
+                                +"web"
                             }
                             span(classes = "title") {
                                 +"Inscrições"

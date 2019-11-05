@@ -1,3 +1,16 @@
+/*AdrianTodt*/
+.underlined {
+	border-bottom: 1px solid rgba(160, 160, 160, 0.2);
+	padding-bottom: 5px;
+	margin: .75rem;
+}
+
+.col > .underlined {
+	margin: .75rem 0;
+}
+
+
+/*Montefusco*/
 header{
 	/*background-image: linear-gradient(to right, #81F781, #81BEF7, #F781F3);*/ /*verde azul rosa*/
 	background-image: linear-gradient(to right, #81BEF7, #F78181, #F781F3); /*azul vermelho rosa*/

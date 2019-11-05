@@ -62,12 +62,17 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 CREATE TABLE IF NOT EXISTS pagini_link(
                     ordinal INT PRIMARY KEY,
                     nome TEXT NOT NULL,
-                    link TEXT NOT NULL
+                    href TEXT NOT NULL
                 )
                 """.trimIndent())
 
             if (it.createQuery("SELECT COUNT(id) FROM pagini_pessoa").mapTo<Int>().one() < 1) {
-                insertUsuario("admin", hashPassword("admin"), insertPessoa("Administrador PágIni").id, true)
+                insertUsuario("admin", "admin", insertPessoa("Administrador PágIni").id, true)
+            }
+
+            if (it.createQuery("SELECT COUNT(ordinal) FROM pagini_link").mapTo<Int>().one() < 1) {
+                insertLink(0, "Home", "/")
+                insertLink(1, "Login", "/login")
             }
         }
     }
@@ -155,6 +160,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 .bind("h", hash)
                 .bind("p", pessoaId)
                 .bind("admin", admin)
+                .execute()
         }
 
         return Usuario(username, hash, pessoaId, admin)

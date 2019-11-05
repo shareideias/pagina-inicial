@@ -9,7 +9,7 @@ class LoginView(dao: DataAccessObject) : ModeloView(dao) {
     override val extraCss = listOf("/css/login.css")
     override val mainPage = "/"
 
-    override fun MAIN.main(ctx: Context) {
+    override fun MAIN.renderMain(ctx: Context) {
         div(classes = "container caixa_login") {
             div(classes = "z-depth-1 grey lighten-4 row geral_login") {
                 img(classes = "imagem_login", alt = "Logo da Share", src = "/img/share-logo.png")

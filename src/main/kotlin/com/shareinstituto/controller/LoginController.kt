@@ -72,8 +72,7 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         }
 
         dao.getUsuario(user)?.let { u ->
-            //TODO ACTUAL HASHING
-            if (pass == u.hash) {
+            if (u.hash == DataAccessObject.hashPassword(pass)) {
                 loginRoutine(ctx, u, rememberMe)
                 return
             }
