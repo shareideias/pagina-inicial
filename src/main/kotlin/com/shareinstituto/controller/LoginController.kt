@@ -94,7 +94,7 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         if (rememberMe) {
             val expires = Date.from(Instant.now().plus(60, ChronoUnit.DAYS))
             val jwt = JWT.create()
-                .withIssuer("apicursos")
+                .withIssuer("associacaoshare")
                 .withSubject(u.username)
                 .withIssuedAt(Date())
                 .withExpiresAt(expires)

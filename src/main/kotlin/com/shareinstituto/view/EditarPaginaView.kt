@@ -16,16 +16,24 @@ class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
                 id = "summernote"
             }
         }
+    }
 
+    override fun BODY.scripts() {
+        script(src = "http://code.jquery.com/jquery-3.4.1.min.js") {}
+        script(src = "/js/materialize.min.js") {}
         script {
             unsafe {
                 +"""
                     $(document).ready(function() {
                         $('#summernote').summernote()
                     })
+                    
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var elems = document.querySelectorAll('.sidenav');
+                        var instances = M.Sidenav.init(elems, {}});
+                    });
                 """.trimIndent()
             }
-
         }
     }
 }

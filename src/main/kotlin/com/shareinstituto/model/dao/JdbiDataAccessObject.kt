@@ -143,6 +143,22 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
         }
     }
 
+    override fun allNoticias(): List<Noticia> {
+        return jdbi.withHandleUnchecked {
+            it.createQuery("SELECT * FROM pagini_noticia")
+                .mapTo<Noticia>()
+                .list()
+        }
+    }
+
+    override fun allPaginas(): List<Pagina> {
+        return jdbi.withHandleUnchecked {
+            it.createQuery("SELECT * FROM pagini_pagina")
+                .mapTo<Pagina>()
+                .list()
+        }
+    }
+
     override fun allLinks(): List<Link> {
         return jdbi.withHandleUnchecked {
             it.createQuery("SELECT * FROM pagini_link")

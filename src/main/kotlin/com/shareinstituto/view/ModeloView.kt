@@ -64,7 +64,7 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
 
     abstract fun MAIN.renderMain(ctx: Context)
 
-    private fun BODY.scripts() {
+    open fun BODY.scripts() {
         script(src = "/js/materialize.min.js") {}
         script {
             unsafe {

@@ -9,7 +9,10 @@
 	margin: .75rem 0;
 }
 
-
+code {
+    padding: 2px;
+    border-radius: 2.5px;
+}
 /*Montefusco*/
 header{
 	/*background-image: linear-gradient(to right, #81F781, #81BEF7, #F781F3);*/ /*verde azul rosa*/

@@ -13,7 +13,10 @@ interface DataAccessObject {
 
     fun allUsuarios(): List<Usuario>
     fun allPessoas(): List<Pessoa>
+    fun allNoticias(): List<Noticia>
+    fun allPaginas(): List<Pagina>
     fun allLinks(): List<Link>
+
 
     fun insertUsuario(username: String, password: String, pessoaId: Int, admin: Boolean): Usuario
     fun insertPessoa(nome: String): Pessoa

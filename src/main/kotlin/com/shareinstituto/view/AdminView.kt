@@ -10,6 +10,25 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
     override val mainPage = "/admin"
 
     private fun DIV.collumn1() {
+        h5 { +"Notícias" }
+
+        ul(classes = "collection") {
+            a("/newLink", classes = "collection-item") { +"Nova Notícia" }
+
+            for (link in dao.allLinks()) {
+                li(classes = "collection-item avatar") {
+                    i(classes = "material-icons circle") { +"receipt" }
+                    span(classes = "title") { +link.nome }
+                    p {
+                        +"Aponta para "
+                        code("blue lighten-5") { a(href = link.href) { +link.href } }
+                    }
+                    a(href = "/editLink/${link.ordinal}", classes = "secondary-content") {
+                        i(classes = "material-icons") { +"edit" }
+                    }
+                }
+            }
+        }
 
     }
 
@@ -18,7 +37,25 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
     }
 
     private fun DIV.collumn3() {
+        h5 { +"Links" }
 
+        ul(classes = "collection") {
+            a("/newLink", classes = "collection-item") { +"Novo Link" }
+
+            for (link in dao.allLinks()) {
+                li(classes = "collection-item avatar") {
+                    i(classes = "material-icons circle") { +"short_text" }
+                    span(classes = "title") { +link.nome }
+                    p {
+                        +"Aponta para "
+                        code("blue lighten-5") { a(href = link.href) { +link.href } }
+                    }
+                    a(href = "/editLink/${link.ordinal}", classes = "secondary-content") {
+                        i(classes = "material-icons") { +"edit" }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -27,74 +64,15 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
 
         div(classes = "container") {
             div(classes = "row") {
-                div("col s12 m4") {
-
-                }
-                div("col s12 m4") {
-
-                }
-                div("col s12 m4") {
-
-                }
+                div("col s12 m4") { collumn1() }
+                div("col s12 m4") { collumn2() }
+                div("col s12 m4") { collumn3() }
             }
         }
 
         div(classes = "container") {
             div(classes = "row") {
                 div(classes = "col 14 m6 s12") {
-                    h5(classes = "underlined") {
-                        +"Links"
-                    }
-                    ul(classes = "collection") {
-                        li(classes = "collection-item avatar") {
-                            i(classes = "material-icons circle") {
-                                +"short_text"
-                            }
-                            span(classes = "title") {
-                                +"Recente 1"
-                            }
-                            p { +"Text" }
-                            a(href = "#!", classes = "secondary-content") {
-                                i(classes = "material-icons") {
-                                    +"edit"
-                                }
-                            }
-                        }
-                    }
-
-                    ul(classes = "collection") {
-                        li(classes = "collection-item avatar") {
-                            i(classes = "material-icons circle") {
-                                +"short_text"
-                            }
-                            span(classes = "title") {
-                                +"Recente 2"
-                            }
-                            p { +"Text" }
-                            a(href = "#!", classes = "secondary-content") {
-                                i(classes = "material-icons") {
-                                    +"edit"
-                                }
-                            }
-                        }
-                    }
-
-                    ul(classes = "collection") {
-                        li(classes = "collection-item avatar") {
-                            i(classes = "material-icons circle") {
-                                +"short_text"
-                            }
-                            span(classes = "title") {
-                                +"Recente 3"
-                            }
-                            p { +"Text" }
-                            a(href = "#!", classes = "secondary-content") {
-                                i(classes = "material-icons") {
-                                    +"edit"
-                                }
-                            }
-                        }
-                    }
 
                     h3(classes = "news_title") {
                         +"Notícias"
@@ -114,9 +92,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
                                 }
                             }
                         }
-                    }
-
-                    ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
                                 +"receipt"
@@ -131,9 +106,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
                                 }
                             }
                         }
-                    }
-
-                    ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
                                 +"receipt"
@@ -148,10 +120,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
                                 }
                             }
                         }
-                    }
-
-
-                    ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
                                 +"receipt"
@@ -193,9 +161,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
                                 }
                             }
                         }
-                    }
-
-                    ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
                                 +"web"
@@ -210,9 +175,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
                                 }
                             }
                         }
-                    }
-
-                    ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
                                 +"web"
@@ -227,9 +189,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
                                 }
                             }
                         }
-                    }
-
-                    ul(classes = "collection") {
                         li(classes = "collection-item avatar") {
                             i(classes = "material-icons circle") {
                                 +"web"
@@ -245,7 +204,6 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
                             }
                         }
                     }
-
                 }
             }
         }
