@@ -18,20 +18,19 @@ class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
         }
     }
 
-    override fun BODY.scripts() {
+    override fun HEAD.extraLinks() {
+        link(href = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.css", rel = "stylesheet")
+        script(src = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.js") {}
+    }
+
+    override fun BODY.extraScripts() {
         script(src = "http://code.jquery.com/jquery-3.4.1.min.js") {}
-        script(src = "/js/materialize.min.js") {}
         script {
             unsafe {
                 +"""
-                    $(document).ready(function() {
-                        $('#summernote').summernote()
-                    })
-                    
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var elems = document.querySelectorAll('.sidenav');
-                        var instances = M.Sidenav.init(elems, {});
-                    });
+                $(document).ready(function() {
+                    $('#summernote').summernote();
+                })
                 """.trimIndent()
             }
         }

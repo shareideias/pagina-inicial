@@ -17,7 +17,7 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
             link("https://fonts.googleapis.com/icon?family=Material+Icons", "stylesheet")
             link("/css/materialize.min.css", "stylesheet")
             link("/css/modelo.css", "stylesheet")
-            script(src = "https://code.jquery.com/jquery-3.4.1.min.js") {}
+            extraLinks()
             title("Share - $pageTitle")
             link("/img/globo.png", "icon")
 
@@ -64,7 +64,11 @@ abstract class ModeloView(val dao: DataAccessObject) : HtmlBuilderView() {
 
     abstract fun MAIN.renderMain(ctx: Context)
 
-    open fun BODY.scripts() {
+    open fun HEAD.extraLinks() = Unit
+    open fun BODY.extraScripts() = Unit
+
+    private fun BODY.scripts() {
+        extraScripts()
         script(src = "/js/materialize.min.js") {}
         script {
             unsafe {
