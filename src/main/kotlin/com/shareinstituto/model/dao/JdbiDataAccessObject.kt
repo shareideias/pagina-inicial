@@ -21,7 +21,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 CREATE TABLE IF NOT EXISTS pagini_pessoa(
                     id SERIAL PRIMARY KEY,
                     nome TEXT NOT NULL,
-                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW
+                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW()
                 )
                 """.trimIndent())
 
@@ -29,7 +29,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 CREATE TABLE IF NOT EXISTS pagini_usuario(
                     username TEXT PRIMARY KEY,
                     hash TEXT NOT NULL,
-                    pessoaId INT REFERENCES pessoa(id) ON DELETE CASCADE,
+                    pessoaId INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE,
                     admin BOOLEAN DEFAULT FALSE
                 )
                 """.trimIndent())
@@ -39,10 +39,10 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     id SERIAL PRIMARY KEY,
                     titulo TEXT NOT NULL,
                     html TEXT NOT NULL,
-                    criadoPorPessoa INT REFERENCES pessoa(id) ON DELETE CASCADE,
-                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW,
+                    criadoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE,
+                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW(),
                     dataModificacao TIMESTAMP,
-                    ultimaModificacaoPorPessoa INT REFERENCES pessoa(id) ON DELETE CASCADE
+                    ultimaModificacaoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE
                 )
                 """.trimIndent())
 
@@ -51,10 +51,10 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     linkPagina TEXT PRIMARY KEY,
                     titulo TEXT NOT NULL,
                     html TEXT NOT NULL,
-                    criadoPorPessoa INT REFERENCES pessoa(id) ON DELETE CASCADE,
-                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW,
+                    criadoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE,
+                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW(),
                     dataModificacao TIMESTAMP,
-                    ultimaModificacaoPorPessoa INT REFERENCES pessoa(id) ON DELETE CASCADE
+                    ultimaModificacaoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE
                 )
                 """.trimIndent())
 
@@ -66,7 +66,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 )
                 """.trimIndent())
 
-            if (it.createQuery("SELECT COUNT(username) FROM pagini_pessoa").mapTo<Int>().one() < 1) {
+            if (it.createQuery("SELECT COUNT(id) FROM pagini_pessoa").mapTo<Int>().one() < 1) {
                 insertUsuario("admin", hashPassword("admin"), insertPessoa("Administrador PágIni").id, true)
             }
         }

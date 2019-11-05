@@ -9,15 +9,15 @@ import com.shareinstituto.model.dao.JdbiDataAccessObject
 import io.javalin.Javalin
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
+import org.kodein.di.generic.eagerSingleton
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
 
 fun main() {
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
 
     val kodein = Kodein {
-        bind<DataAccessObject>() with singleton { JdbiDataAccessObject("jdbc:postgresql:shareideias") }
+        bind<DataAccessObject>() with eagerSingleton { JdbiDataAccessObject("jdbc:postgresql:shareideias") }
         bind<Algorithm>() with provider {
             Algorithm.HMAC256(System.getenv("secret") ?: "shareinstituto_is_very_secret")
         }
