@@ -1,55 +1,51 @@
 package com.shareinstituto.view
 
 import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.view.base.PagIniView
 import io.javalin.http.Context
 import kotlinx.html.*
+import kotlinx.html.ButtonType.submit
+import kotlinx.html.FormMethod.post
+import kotlinx.html.InputType.password
+import kotlinx.html.InputType.text
 
-class LoginView(dao: DataAccessObject) : ModeloView(dao) {
+class LoginView(dao: DataAccessObject) : PagIniView(dao, Type.LOGIN) {
     override val pageTitle = "Login"
-    override val extraCss = listOf("/css/login.css")
-    override val mainPage = "/"
 
     override fun MAIN.renderMain(ctx: Context) {
-        div(classes = "container caixa_login") {
-            div(classes = "z-depth-1 grey lighten-4 row geral_login") {
-                img(classes = "imagem_login", alt = "Logo da Share", src = "/img/share-logo.png")
-                form(classes = "col s12", method = FormMethod.post, action = "/doLogin") {
-
+        div("container loginbox") {
+            div("loginbox-inner row grey lighten-4 z-depth-1") {
+                img("Logo da Share", "/img/share-logo.png", "loginbox-img")
+                form("/doLogin", method = post, classes = "col s12") {
                     ctx.queryParam("err")?.let { err ->
-                        div("card-panel red darken-1 white-text center-align") {
+                        div("card-panel loginbox-warnbox red lighten-2 white-text center-align") {
                             when (err) {
-                                "invalidcreds" -> {
-                                    +"Credenciais inválidas."
-                                }
-                                "unauthorized" -> {
-                                    +"Por favor, faça login."
-                                }
-                                else -> {
-                                    +"Erro desconhecido."
-                                }
+                                "invalidcreds" -> +"Credenciais inválidas."
+                                "unauthorized" -> +"Por favor, faça login."
+                                else -> +"Erro desconhecido."
                             }
                         }
                     }
 
                     ctx.queryParam("then")?.let { then -> hiddenInput(name = "then") { value = then } }
 
-                    div(classes = "input-field") {
+                    div("input-field") {
                         label {
                             htmlFor = "username"
                             +"Nome de usuário"
                         }
-                        input(classes = "validate", type = InputType.text, name = "username") {
+                        input(text, classes = "validate", name = "username") {
                             id = "username"
                             ctx.queryParam("username")?.let { value = it }
                         }
                     }
 
-                    div(classes = "input-field") {
+                    div("input-field") {
                         label {
                             htmlFor = "password"
                             +"Senha"
                         }
-                        input(classes = "validate", type = InputType.password, name = "password") {
+                        input(password, classes = "validate", name = "password") {
                             id = "password"
                         }
                     }
@@ -57,18 +53,15 @@ class LoginView(dao: DataAccessObject) : ModeloView(dao) {
                     p("center-align") {
                         label {
                             checkBoxInput(name = "ilovecookies")
-                            span { +"Lembrar-me" }
+                            span("bold") { +"Lembrar-me" }
                         }
                     }
 
-                    button(type = ButtonType.submit, name = "btn_login", classes = "col s12 btn btn-large waves-effect light-blue lighten-2") {
+                    button(type = submit, classes = "col s12 btn btn-large waves-effect light-blue lighten-2") {
                         +"Entrar"
                     }
                 }
             }
         }
-
-        div(classes = "section")
-        div(classes = "section")
     }
 }

@@ -1,48 +1,49 @@
 package com.shareinstituto.view
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.shareinstituto.model.Pagina
 import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.view.base.PagIniAdminView
 import io.javalin.http.Context
 import kotlinx.html.*
 import kotlinx.html.ButtonType.submit
+import kotlinx.html.FormMethod.post
+import kotlinx.html.InputType.text
 
-class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
-    override val pageTitle = "Nova Página"
-    override val extraCss = listOf("/css/administração.css")
-    override val mainPage = "/admin"
+class EditarPaginaView(private val mapper: ObjectMapper, dao: DataAccessObject, private val pagina: Pagina?) : PagIniAdminView(dao) {
+    override val pageTitle = if (pagina == null) "Nova Página" else "Edição de Página"
 
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
-            h5("underlined") { +"Nova Página" }
-            form(method = FormMethod.post) {
+            h5("underlined") { +pageTitle }
+            form(method = post) {
                 div("row") {
-                    div(classes = "input-field col s8") {
+                    div("input-field col s8") {
                         label {
                             htmlFor = "inputTitle"
                             +"Título da página"
                         }
-                        input(type = InputType.text, classes = "validate") {
-                            placeholder = "Título"
+                        input(text, classes = "validate", name = "title") {
                             id = "inputTitle"
-                            name = "title"
+                            placeholder = "Título"
+                            pagina?.let { value = it.titulo }
                         }
                     }
 
-                    div(classes = "input-field col s4") {
+                    div("input-field col s4") {
                         label {
                             htmlFor = "inputLink"
                             +"Link da página"
                         }
-                        input(type = InputType.text, classes = "validate") {
-                            placeholder = "link_da_pagina"
+                        input(text, classes = "validate", name = "linkPagina") {
                             id = "inputLink"
-                            name = "linkPagina"
+                            placeholder = "link_da_pagina"
+                            pagina?.let { value = it.linkPagina }
                         }
                     }
 
                     div("col s12") {
-                        label {
-                            +"Corpo da página"
-                        }
+                        label { +"Corpo da página" }
                         textArea(classes = "materialize-textarea") {
                             id = "summernote"
                             name = "html"
@@ -50,8 +51,8 @@ class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
                     }
 
                     div("col s12 input-field") {
-                        button(classes = "btn waves-effect light-blue lighten-2", type = submit) {
-                            +"Criar Página"
+                        button(type = submit, classes = "btn waves-effect light-blue lighten-2") {
+                            +if (pagina == null) "Criar Página" else "Editar Página"
                             i("material-icons right") { +"send" }
                         }
                     }
@@ -60,12 +61,15 @@ class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
         }
     }
 
-    override fun HEAD.extraLinks() {
-        link(href = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.css", rel = "stylesheet")
+    override fun HEAD.afterLinks(ctx: Context) {
+        link("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.css", "stylesheet")
     }
 
-    override fun BODY.extraScripts() {
+    override fun BODY.beforeScripts(ctx: Context) {
         script(src = "http://code.jquery.com/jquery-3.4.1.min.js") {}
+    }
+
+    override fun BODY.afterScripts(ctx: Context) {
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.js") {}
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/lang/summernote-pt-BR.min.js") {}
         script {
@@ -73,6 +77,14 @@ class EditarPaginaView(dao: DataAccessObject) : AdminModeloView(dao) {
                 +"""
                 $(document).ready(function() {
                     $('#summernote').summernote({ height: 400, lang: 'pt-BR' });
+                """.trimIndent()
+
+                pagina?.let {
+                    +"""
+                    $('#summernote').summernote('pasteHTML', ${mapper.writeValueAsString(it.html)});
+                    """.trimIndent()
+                }
+                +"""
                 })
                 """.trimIndent()
             }

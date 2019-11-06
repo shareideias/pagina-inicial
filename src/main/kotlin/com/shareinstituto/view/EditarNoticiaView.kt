@@ -1,36 +1,37 @@
 package com.shareinstituto.view
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.shareinstituto.model.Noticia
 import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.view.base.PagIniAdminView
 import io.javalin.http.Context
 import kotlinx.html.*
 import kotlinx.html.ButtonType.submit
+import kotlinx.html.FormMethod.post
+import kotlinx.html.InputType.text
 
-class EditarNoticiaView(dao: DataAccessObject) : AdminModeloView(dao) {
-    override val pageTitle = "Nova Notícia"
-    override val extraCss = listOf("/css/administração.css")
-    override val mainPage = "/admin"
+class EditarNoticiaView(private val mapper: ObjectMapper, dao: DataAccessObject, private val noticia: Noticia?) : PagIniAdminView(dao) {
+    override val pageTitle = if (noticia == null) "Nova Notícia" else "Edição de Notícia"
 
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
             h5("underlined") { +"Nova Notícia" }
-            form(method = FormMethod.post) {
+            form(method = post) {
                 div("row") {
-                    div(classes = "input-field col s12") {
+                    div("input-field col s12") {
                         label {
                             htmlFor = "inputTitle"
                             +"Título da notícia"
                         }
-                        input(type = InputType.text, classes = "validate") {
-                            placeholder = "Título"
+                        input(text, classes = "validate", name = "title") {
                             id = "inputTitle"
-                            name = "title"
+                            placeholder = "Título"
+                            noticia?.let { value = it.titulo }
                         }
                     }
 
                     div("col s12") {
-                        label {
-                            +"Corpo da página"
-                        }
+                        label { +"Corpo da página" }
                         textArea(classes ="materialize-textarea") {
                             id = "summernote"
                             name = "html"
@@ -38,8 +39,8 @@ class EditarNoticiaView(dao: DataAccessObject) : AdminModeloView(dao) {
                     }
 
                     div("col s12 input-field") {
-                        button(classes = "btn waves-effect light-blue lighten-2", type = submit) {
-                            +"Criar Notícia"
+                        button(type = submit, classes = "btn waves-effect light-blue lighten-2") {
+                            +if (noticia == null) "Criar Notícia" else "Editar Notícia"
                             i("material-icons right") { +"send" }
                         }
                     }
@@ -48,12 +49,15 @@ class EditarNoticiaView(dao: DataAccessObject) : AdminModeloView(dao) {
         }
     }
 
-    override fun HEAD.extraLinks() {
-        link(href = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.css", rel = "stylesheet")
+    override fun HEAD.afterLinks(ctx: Context) {
+        link("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.css", "stylesheet")
     }
 
-    override fun BODY.extraScripts() {
+    override fun BODY.beforeScripts(ctx: Context) {
         script(src = "http://code.jquery.com/jquery-3.4.1.min.js") {}
+    }
+
+    override fun BODY.afterScripts(ctx: Context) {
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.js") {}
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/lang/summernote-pt-BR.min.js") {}
         script {
@@ -61,6 +65,14 @@ class EditarNoticiaView(dao: DataAccessObject) : AdminModeloView(dao) {
                 +"""
                 $(document).ready(function() {
                     $('#summernote').summernote({ height: 400, lang: 'pt-BR' });
+                """.trimIndent()
+
+                noticia?.let {
+                    +"""
+                    $('#summernote').summernote('pasteHTML', ${mapper.writeValueAsString(it.html)});
+                    """.trimIndent()
+                }
+                +"""
                 })
                 """.trimIndent()
             }

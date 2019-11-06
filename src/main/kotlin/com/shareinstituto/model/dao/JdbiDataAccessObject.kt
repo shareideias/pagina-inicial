@@ -1,19 +1,20 @@
 package com.shareinstituto.model.dao
 
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.shareinstituto.model.*
 import com.shareinstituto.model.dao.DataAccessObject.Companion.hashPassword
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.*
+import org.jdbi.v3.jackson2.Jackson2Config
 import org.jdbi.v3.jackson2.Jackson2Plugin
 import org.jdbi.v3.postgres.PostgresPlugin
-import org.jdbi.v3.sqlobject.kotlin.KotlinSqlObjectPlugin
 
 class JdbiDataAccessObject(url: String) : DataAccessObject {
     val jdbi = Jdbi.create(url)
         .installPlugin(PostgresPlugin())
         .installPlugin(Jackson2Plugin())
         .installPlugin(KotlinPlugin())
-        .installPlugin(KotlinSqlObjectPlugin())
+        .apply { getConfig(Jackson2Config::class.java).mapper.registerKotlinModule() }
 
     init {
         jdbi.useHandleUnchecked {

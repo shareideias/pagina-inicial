@@ -2,14 +2,14 @@ package com.shareinstituto.view
 
 import com.shareinstituto.model.Noticia
 import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.view.base.PagIniView
+import com.shareinstituto.view.base.PagIniView.Type.PUBLIC_PAGE
 import io.javalin.http.Context
 import kotlinx.html.*
 import java.time.format.DateTimeFormatter
 
-class NoticiaView(dao: DataAccessObject, private val noticia: Noticia) : ModeloView(dao) {
+class NoticiaView(dao: DataAccessObject, private val noticia: Noticia) : PagIniView(dao, PUBLIC_PAGE) {
     override val pageTitle = noticia.titulo
-    override val extraCss = listOf("/css/pagina.css")
-    override val mainPage = "/"
 
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
@@ -39,17 +39,6 @@ class NoticiaView(dao: DataAccessObject, private val noticia: Noticia) : ModeloV
                     }
                 }
             }
-        }
-    }
-
-    override fun BODY.extraScripts() {
-        footer(classes = "rodape_pag") {
-            ul(classes = "redes_sociais") {
-                li { a("https://www.facebook.com/shareideias/", classes = "facebook") { +"Facebook" } }
-                li { a("https://www.instagram.com/shareideias/", classes = "instagram") { +"Instagram" } }
-                li { a("https://www.linkedin.com/in/shareideias/", classes = "linkedin") { +"LinkedIn" } }
-            }
-            p { +"© Share. Todos os direitos reservados." }
         }
     }
 }

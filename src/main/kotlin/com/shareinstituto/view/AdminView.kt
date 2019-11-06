@@ -1,33 +1,43 @@
 package com.shareinstituto.view
 
 import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.view.base.PagIniAdminView
 import io.javalin.http.Context
 import kotlinx.html.*
 import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
 
-class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
+class AdminView(dao: DataAccessObject) : PagIniAdminView(dao) {
     override val pageTitle = "Administração"
-    override val extraCss = listOf("/css/administração.css")
-    override val mainPage = "/admin"
+
+    override fun MAIN.renderMain(ctx: Context) {
+        div("container") {
+            h4("underlined") { +"Administração" }
+            div("row") {
+                div("col s12 m4") { collumn1() }
+                div("col s12 m4") { collumn2() }
+                div("col s12 m4") { collumn3() }
+            }
+        }
+    }
 
     private fun DIV.collumn1() {
         h5 { +"Notícias" }
 
-        ul(classes = "collection") {
+        ul("collection") {
             a("/admin/novaNoticia", classes = "collection-item") { +"Nova Notícia" }
 
             for (noticia in dao.allNoticias()) {
-                li(classes = "collection-item avatar") {
-                    i(classes = "material-icons circle") { +"receipt" }
-                    span(classes = "title") { +noticia.titulo }
+                li("collection-item avatar") {
+                    i("material-icons circle") { +"receipt" }
+                    span("title bold") { +noticia.titulo }
                     p {
                         +"Criado por "
                         +(dao.getPessoa(noticia.criadoPorPessoa)?.nome ?: "Usuário Removido")
                         +" em "
                         b { +RFC_1123_DATE_TIME.format(noticia.dataCriacao) }
                     }
-                    a(href = "/admin/editNoticia/${noticia.id}", classes = "secondary-content") {
-                        i(classes = "material-icons") { +"edit" }
+                    a("/admin/editNoticia/${noticia.id}", classes = "secondary-content") {
+                        i("material-icons") { +"edit" }
                     }
                 }
             }
@@ -36,62 +46,57 @@ class AdminView(dao: DataAccessObject) : AdminModeloView(dao) {
     }
 
     private fun DIV.collumn2() {
-
         h5 { +"Páginas" }
 
-        ul(classes = "collection") {
+        ul("collection") {
             a("/admin/novaPagina", classes = "collection-item") { +"Nova Página" }
 
             for (pagina in dao.allPaginas()) {
-                li(classes = "collection-item avatar") {
-                    i(classes = "material-icons circle") { +"web" }
-                    span(classes = "title") { +pagina.titulo }
+                li("collection-item avatar") {
+                    i("material-icons circle") { +"web" }
+                    span("title") { +pagina.titulo }
                     p {
                         +"Criado por "
                         +(dao.getPessoa(pagina.criadoPorPessoa)?.nome ?: "Usuário removido")
                         +" em "
                         b { +RFC_1123_DATE_TIME.format(pagina.dataCriacao) }
                     }
-                    a(href = "/admin/editPagina/${pagina.linkPagina}", classes = "secondary-content") {
-                        i(classes = "material-icons") { +"edit" }
+                    a("/admin/editPagina/${pagina.linkPagina}", classes = "secondary-content") {
+                        i("material-icons") { +"edit" }
                     }
                 }
             }
         }
 
     }
+
 
     private fun DIV.collumn3() {
         h5 { +"Links" }
 
-        ul(classes = "collection") {
+        ul("collection") {
             a("/admin/novoLink", classes = "collection-item") { +"Novo Link" }
 
-            for (link in dao.allLinks()) {
-                li(classes = "collection-item avatar") {
-                    i(classes = "material-icons circle") { +"short_text" }
-                    span(classes = "title") { +link.nome }
+            val allLinks = dao.allLinks()
+            allLinks.withIndex().forEach { (i, link) ->
+                li("collection-item avatar") {
+                    i("material-icons circle") { +"short_text" }
+                    span("title") { +link.nome }
                     p {
                         +"Aponta para "
-                        code("blue lighten-5") { a(href = link.href) { +link.href } }
+                        code("blue lighten-5") { a(link.href) { +link.href } }
                     }
-                    a(href = "/admin/editLink/${link.ordinal}", classes = "secondary-content") {
-                        i(classes = "material-icons") { +"edit" }
+                    div("secondary-content") {
+                        if (i != allLinks.lastIndex) {
+                            a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"keyboard_arrow_down" } }
+                        }
+                        if (i != 0) {
+                            a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"keyboard_arrow_up" } }
+                        }
+                        a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"edit" } }
+                        a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"delete" } }
                     }
                 }
-            }
-        }
-    }
-
-
-    override fun MAIN.renderMain(ctx: Context) {
-
-        div(classes = "container") {
-            h4("underlined") { +"Administração" }
-            div(classes = "row") {
-                div("col s12 m4") { collumn1() }
-                div("col s12 m4") { collumn2() }
-                div("col s12 m4") { collumn3() }
             }
         }
     }

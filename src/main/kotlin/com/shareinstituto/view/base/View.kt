@@ -1,4 +1,4 @@
-package com.shareinstituto.view
+package com.shareinstituto.view.base
 
 import io.javalin.http.Context
 
