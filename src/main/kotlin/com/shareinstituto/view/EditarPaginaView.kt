@@ -1,8 +1,6 @@
 package com.shareinstituto.view
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.shareinstituto.model.Pagina
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.EditarPaginaViewModel
 import com.shareinstituto.view.base.PagIniAdminView
 import io.javalin.http.Context
 import kotlinx.html.*
@@ -10,8 +8,8 @@ import kotlinx.html.ButtonType.submit
 import kotlinx.html.FormMethod.post
 import kotlinx.html.InputType.text
 
-class EditarPaginaView(private val mapper: ObjectMapper, dao: DataAccessObject, private val pagina: Pagina?) : PagIniAdminView(dao) {
-    override val pageTitle = if (pagina == null) "Nova Página" else "Edição de Página"
+class EditarPaginaView(override val model: EditarPaginaViewModel) : PagIniAdminView() {
+    override val pageTitle = if (model.editing) "Edição de Página" else "Nova Página"
 
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
@@ -26,7 +24,7 @@ class EditarPaginaView(private val mapper: ObjectMapper, dao: DataAccessObject, 
                         input(text, classes = "validate", name = "title") {
                             id = "inputTitle"
                             placeholder = "Título"
-                            pagina?.let { value = it.titulo }
+                            model.pagina?.let { value = it.titulo }
                         }
                     }
 
@@ -38,7 +36,7 @@ class EditarPaginaView(private val mapper: ObjectMapper, dao: DataAccessObject, 
                         input(text, classes = "validate", name = "linkPagina") {
                             id = "inputLink"
                             placeholder = "link_da_pagina"
-                            pagina?.let { value = it.linkPagina }
+                            model.pagina?.let { value = it.linkPagina }
                         }
                     }
 
@@ -52,7 +50,7 @@ class EditarPaginaView(private val mapper: ObjectMapper, dao: DataAccessObject, 
 
                     div("col s12 input-field") {
                         button(type = submit, classes = "btn waves-effect light-blue lighten-2") {
-                            +if (pagina == null) "Criar Página" else "Editar Página"
+                            +if (model.pagina == null) "Criar Página" else "Editar Página"
                             i("material-icons right") { +"send" }
                         }
                     }
@@ -76,16 +74,26 @@ class EditarPaginaView(private val mapper: ObjectMapper, dao: DataAccessObject, 
             unsafe {
                 +"""
                 $(document).ready(function() {
-                    $('#summernote').summernote({ height: 400, lang: 'pt-BR' });
+                    $('#summernote').summernote({
+                        height: 400, lang: 'pt-BR',
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['fontsize', 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                            ['color', ['forecolor', 'backcolor']],
+                            ['para', ['ul', 'ol', 'paragraph', 'height']],
+                            ['insert', ['table', 'picture', 'video', 'link', 'hr']],
+                            ['view', ['fullscreen', 'codeview']]
+                        ]
+                     });
                 """.trimIndent()
 
-                pagina?.let {
+                model.pagina?.takeIf { it.html.isNotEmpty() }?.let {
                     +"""
-                    $('#summernote').summernote('pasteHTML', ${mapper.writeValueAsString(it.html)});
+                    $('#summernote').summernote('code', ${model.mapper.writeValueAsString(it.html)});
                     """.trimIndent()
                 }
                 +"""
-                })
+                });
                 """.trimIndent()
             }
         }

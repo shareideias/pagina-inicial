@@ -1,22 +1,20 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.Pagina
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.PaginaViewModel
 import com.shareinstituto.view.base.PagIniView
 import com.shareinstituto.view.base.PagIniView.Type.PUBLIC_PAGE
 import io.javalin.http.Context
-import kotlinx.html.MAIN
-import kotlinx.html.article
-import kotlinx.html.h3
-import kotlinx.html.unsafe
+import kotlinx.html.*
 
-class PaginaView(dao: DataAccessObject, private val pagina: Pagina) : PagIniView(dao, PUBLIC_PAGE) {
-    override val pageTitle = pagina.titulo
+class PaginaView(override val model: PaginaViewModel) : PagIniView(PUBLIC_PAGE) {
+    override val pageTitle = model.pagina.titulo
 
     override fun MAIN.renderMain(ctx: Context) {
-        article {
-            h3 { +pagina.titulo }
-            unsafe { +pagina.html }
+        div("container") {
+            article {
+                h3 { +model.pagina.titulo }
+                unsafe { +model.pagina.html }
+            }
         }
     }
 }

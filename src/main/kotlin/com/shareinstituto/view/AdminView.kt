@@ -1,12 +1,14 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.AdminViewModel
+import com.shareinstituto.utils.forEachNeighbouring
 import com.shareinstituto.view.base.PagIniAdminView
 import io.javalin.http.Context
 import kotlinx.html.*
+import kotlinx.html.FormMethod.post
 import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
 
-class AdminView(dao: DataAccessObject) : PagIniAdminView(dao) {
+class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
     override val pageTitle = "Administração"
 
     override fun MAIN.renderMain(ctx: Context) {
@@ -26,18 +28,45 @@ class AdminView(dao: DataAccessObject) : PagIniAdminView(dao) {
         ul("collection") {
             a("/admin/novaNoticia", classes = "collection-item") { +"Nova Notícia" }
 
-            for (noticia in dao.allNoticias()) {
+            for (noticia in model.noticias) {
                 li("collection-item avatar") {
                     i("material-icons circle") { +"receipt" }
-                    span("title bold") { +noticia.titulo }
+                    val link = "/n/${noticia.id}"
+                    span("title") {
+                        a(link) {
+                            +noticia.titulo
+                            small {
+                                +" (Local: "
+                                code("blue lighten-5") { +link }
+                                +")"
+                            }
+                        }
+                    }
                     p {
                         +"Criado por "
-                        +(dao.getPessoa(noticia.criadoPorPessoa)?.nome ?: "Usuário Removido")
-                        +" em "
+                        b { +(model.pessoas[noticia.criadoPorPessoa]?.nome ?: "Usuário removido") }
+                    }
+                    p {
+                        +"Em "
                         b { +RFC_1123_DATE_TIME.format(noticia.dataCriacao) }
                     }
-                    a("/admin/editNoticia/${noticia.id}", classes = "secondary-content") {
-                        i("material-icons") { +"edit" }
+                    if (noticia.ultimaModificacaoPorPessoa != null && noticia.dataModificacao != null) {
+                        p {
+                            +"Ultima modificação por "
+                            b { +(model.pessoas[noticia.ultimaModificacaoPorPessoa!!]?.nome ?: "Usuário removido") }
+                        }
+                        p {
+                            +"Em "
+                            b { +RFC_1123_DATE_TIME.format(noticia.dataModificacao!!) }
+                        }
+                    }
+                    div("secondary-content") {
+                        a("/admin/editarNoticia/${noticia.id}") {
+                            i("material-icons") { +"edit" }
+                        }
+                        a("/admin/removerNoticia/${noticia.id}") {
+                            i("material-icons") { +"delete" }
+                        }
                     }
                 }
             }
@@ -51,18 +80,45 @@ class AdminView(dao: DataAccessObject) : PagIniAdminView(dao) {
         ul("collection") {
             a("/admin/novaPagina", classes = "collection-item") { +"Nova Página" }
 
-            for (pagina in dao.allPaginas()) {
+            for (pagina in model.paginas) {
                 li("collection-item avatar") {
                     i("material-icons circle") { +"web" }
-                    span("title") { +pagina.titulo }
+                    val link = "/p/${pagina.linkPagina}"
+                    span("title") {
+                        a(link) {
+                            +pagina.titulo
+                            small {
+                                +" (Local: "
+                                code("blue lighten-5") { +link }
+                                +")"
+                            }
+                        }
+                    }
                     p {
                         +"Criado por "
-                        +(dao.getPessoa(pagina.criadoPorPessoa)?.nome ?: "Usuário removido")
-                        +" em "
+                        b { +(model.pessoas[pagina.criadoPorPessoa]?.nome ?: "Usuário removido") }
+                    }
+                    p {
+                        +"Em "
                         b { +RFC_1123_DATE_TIME.format(pagina.dataCriacao) }
                     }
-                    a("/admin/editPagina/${pagina.linkPagina}", classes = "secondary-content") {
-                        i("material-icons") { +"edit" }
+                    if (pagina.ultimaModificacaoPorPessoa != null && pagina.dataModificacao != null) {
+                        p {
+                            +"Ultima modificação por "
+                            b { +(model.pessoas[pagina.ultimaModificacaoPorPessoa!!]?.nome ?: "Usuário removido") }
+                        }
+                        p {
+                            +"Em "
+                            b { +RFC_1123_DATE_TIME.format(pagina.dataModificacao!!) }
+                        }
+                    }
+                    div("secondary-content") {
+                        a("/admin/editarPagina/${pagina.linkPagina}") {
+                            i("material-icons") { +"edit" }
+                        }
+                        a("/admin/removerPagina/${pagina.linkPagina}") {
+                            i("material-icons") { +"delete" }
+                        }
                     }
                 }
             }
@@ -75,10 +131,7 @@ class AdminView(dao: DataAccessObject) : PagIniAdminView(dao) {
         h5 { +"Links" }
 
         ul("collection") {
-            a("/admin/novoLink", classes = "collection-item") { +"Novo Link" }
-
-            val allLinks = dao.allLinks()
-            allLinks.withIndex().forEach { (i, link) ->
+            model.links.forEachNeighbouring { (link, before, after) ->
                 li("collection-item avatar") {
                     i("material-icons circle") { +"short_text" }
                     span("title") { +link.nome }
@@ -87,17 +140,55 @@ class AdminView(dao: DataAccessObject) : PagIniAdminView(dao) {
                         code("blue lighten-5") { a(link.href) { +link.href } }
                     }
                     div("secondary-content") {
-                        if (i != allLinks.lastIndex) {
-                            a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"keyboard_arrow_down" } }
+                        if (after != null) {
+                            a("/admin/swapLinks?i=${link.id}&j=${after.id}") { i("material-icons") { +"keyboard_arrow_down" } }
                         }
-                        if (i != 0) {
-                            a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"keyboard_arrow_up" } }
+                        if (before != null) {
+                            a("/admin/swapLinks?i=${before.id}&j=${link.id}") { i("material-icons") { +"keyboard_arrow_up" } }
                         }
-                        a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"edit" } }
-                        a("/admin/editLink/${link.ordinal}") { i("material-icons") { +"delete" } }
+                        a("/admin/deleteLink?i=${link.id}") { i("material-icons") { +"delete" } }
                     }
                 }
             }
         }
+
+        br
+
+        div("card") {
+            form("/admin/novoLink", method = post, classes = "card-content") {
+                span("card-title") { +"Novo Link" }
+                div("row mb-0") {
+                    div("input-field col s12 mb-0") {
+                        label {
+                            htmlFor = "inputNome"
+                            +"Nome do Link"
+                        }
+                        input(InputType.text, classes = "validate", name = "nome") {
+                            id = "inputNome"
+                            placeholder = "Nome"
+                        }
+                    }
+
+                    div("input-field col s12 mb-0") {
+                        label {
+                            htmlFor = "inputHref"
+                            +"Endereço do Link"
+                        }
+                        input(InputType.text, classes = "validate", name = "href") {
+                            id = "inputHref"
+                            placeholder = "Endereço"
+                        }
+                    }
+
+                    div("input-field col s12 mb-0") {
+                        button(type = ButtonType.submit, classes = "btn waves-effect light-blue lighten-2") {
+                            +"Criar Link"
+                            i("material-icons right") { +"send" }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

@@ -1,11 +1,12 @@
 package com.shareinstituto.view.base
 
-import com.shareinstituto.model.Link
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.PagIniModel
 import io.javalin.http.Context
 import kotlinx.html.*
 
-abstract class PagIniView(val dao: DataAccessObject, val type: Type) : HtmlBuilderView() {
+abstract class PagIniView(val type: Type) : HtmlBuilderView() {
+    abstract val model: PagIniModel
+
     enum class Type(val cssModules: List<String>) {
         INDEX(listOf("public", "index")),
         LOGIN(listOf("login")),
@@ -52,10 +53,6 @@ abstract class PagIniView(val dao: DataAccessObject, val type: Type) : HtmlBuild
     protected open fun HEAD.afterLinks(ctx: Context) {
     }
 
-    protected open fun navLinks(): List<Link> {
-        return dao.allLinks()
-    }
-
     protected open fun MAIN.renderMain(ctx: Context) {
     }
 
@@ -76,14 +73,12 @@ abstract class PagIniView(val dao: DataAccessObject, val type: Type) : HtmlBuild
                     i("material-icons") { +"menu" }
                 }
 
-                val navLinks = navLinks()
-
                 ul("right hide-on-med-and-down") {
-                    navLinks.forEach { li { a(it.href, classes = "link_menu") { +it.nome } } }
+                    model.navLinks.forEach { li { a(it.href, classes = "link_menu") { +it.nome } } }
                 }
                 ul("sidenav lighten-2") {
                     id = "mobile-menu"
-                    navLinks.forEach { li { a(it.href) { +it.nome } } }
+                    model.navLinks.forEach { li { a(it.href) { +it.nome } } }
                 }
             }
 

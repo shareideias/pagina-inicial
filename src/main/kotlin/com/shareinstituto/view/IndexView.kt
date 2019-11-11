@@ -1,7 +1,7 @@
 package com.shareinstituto.view
 
 import com.shareinstituto.model.Noticia
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.IndexViewModel
 import com.shareinstituto.utils.compressSpaces
 import com.shareinstituto.utils.limit
 import com.shareinstituto.view.base.PagIniView
@@ -11,23 +11,22 @@ import kotlinx.html.*
 import org.jsoup.Jsoup
 import java.time.format.DateTimeFormatter
 
-class IndexView(val pageNumber: Int, dao: DataAccessObject) : PagIniView(dao, INDEX) {
+class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
     override val pageTitle = "Página Inicial"
 
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
-            dao.paginateNoticias(0).take(3).takeIf { it.isNotEmpty() }?.let { renderCards(it) }
+            model.cards.takeIf { it.isNotEmpty() }?.let { renderCards(it) }
             div("row") {
                 div("col s12 xl8") {
                     h5("underlined") { +"Notícias:" }
 
-                    val noticias = dao.paginateNoticias(pageNumber)
-                    if (noticias.isNotEmpty()) {
-                        renderNoticias(noticias)
+                    if (model.noticias.isNotEmpty()) {
+                        renderNoticias(model.noticias)
                     } else {
                         p("blue-grey-text lighten-3 center-align") {
                             i {
-                                if (pageNumber == 0) {
+                                if (model.pageNumber == 0) {
                                     +"O site não tem nenhuma notícia. Elas serão mostradas aqui."
                                 } else {
                                     +"Essa página não contém notícias. Por favor, "
@@ -93,7 +92,7 @@ class IndexView(val pageNumber: Int, dao: DataAccessObject) : PagIniView(dao, IN
                     a("/n/${it.id}") {
                         +DateTimeFormatter.RFC_1123_DATE_TIME.format(it.dataCriacao)
                         +" por "
-                        +(dao.getPessoa(it.criadoPorPessoa)?.nome ?: "Usuário removido")
+                        +(model.pessoas[it.criadoPorPessoa]?.nome ?: "Usuário removido")
                     }
                 }
                 div("justify") { unsafe { +it.html } }

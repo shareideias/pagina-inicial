@@ -9,7 +9,7 @@ interface DataAccessObject {
     fun getPessoa(id: Int): Pessoa?
     fun getNoticia(codigo: Int): Noticia?
     fun getPagina(link: String): Pagina?
-    fun getLink(ordinal: Int): Link?
+    fun getLink(id: Int): Link?
 
     fun allUsuarios(): List<Usuario>
     fun allPessoas(): List<Pessoa>
@@ -22,7 +22,7 @@ interface DataAccessObject {
     fun insertPessoa(nome: String): Pessoa
     fun insertNoticia(titulo: String, html: String, criadoPorPessoa: Int): Noticia
     fun insertPagina(linkPagina: String, titulo: String, html: String, criadoPorPessoa: Int): Pagina
-    fun insertLink(ordinal: Int, nome: String, href: String): Link
+    fun insertLink(nome: String, href: String): Link
 
     fun updateUsuario(usuario: Usuario)
     fun updatePessoa(pessoa: Pessoa)
@@ -34,8 +34,9 @@ interface DataAccessObject {
     fun removePessoa(id: Int)
     fun removeNoticia(id: Int)
     fun removePagina(link: String)
-    fun removeLink(ordinal: Int)
+    fun removeLink(id: Int)
 
+    fun swapLinks(links: Pair<Link, Link>)
     fun paginateNoticias(pagina: Int): List<Noticia>
 
     companion object {

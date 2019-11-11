@@ -1,6 +1,6 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.PagIniModel
 import com.shareinstituto.view.base.PagIniView
 import io.javalin.http.Context
 import kotlinx.html.*
@@ -9,7 +9,7 @@ import kotlinx.html.FormMethod.post
 import kotlinx.html.InputType.password
 import kotlinx.html.InputType.text
 
-class LoginView(dao: DataAccessObject) : PagIniView(dao, Type.LOGIN) {
+class LoginView(override val model: PagIniModel) : PagIniView(Type.LOGIN) {
     override val pageTitle = "Login"
 
     override fun MAIN.renderMain(ctx: Context) {

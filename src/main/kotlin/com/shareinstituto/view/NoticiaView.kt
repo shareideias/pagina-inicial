@@ -1,29 +1,28 @@
 package com.shareinstituto.view
 
-import com.shareinstituto.model.Noticia
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.NoticiaViewModel
 import com.shareinstituto.view.base.PagIniView
 import com.shareinstituto.view.base.PagIniView.Type.PUBLIC_PAGE
 import io.javalin.http.Context
 import kotlinx.html.*
 import java.time.format.DateTimeFormatter
 
-class NoticiaView(dao: DataAccessObject, private val noticia: Noticia) : PagIniView(dao, PUBLIC_PAGE) {
-    override val pageTitle = noticia.titulo
+class NoticiaView(override val model: NoticiaViewModel) : PagIniView(PUBLIC_PAGE) {
+    override val pageTitle = model.noticia.titulo
 
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
             div("row") {
                 div("col s12 xl8") {
                     article {
-                        h3 { +noticia.titulo }
-                        p("noticia_info") {
-                            +DateTimeFormatter.RFC_1123_DATE_TIME.format(noticia.dataCriacao)
+                        h3 { +model.noticia.titulo }
+                        p("article-info") {
+                            +DateTimeFormatter.RFC_1123_DATE_TIME.format(model.noticia.dataCriacao)
                             +" por "
-                            +(dao.getPessoa(noticia.criadoPorPessoa)?.nome ?: "Usuário removido")
+                            +(model.criadoPorPessoa?.nome ?: "Usuário removido")
                         }
                         div("par_news") {
-                            unsafe { +noticia.html }
+                            unsafe { +model.noticia.html }
                         }
                     }
                 }

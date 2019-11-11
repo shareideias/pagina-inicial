@@ -7,7 +7,7 @@ data class Pagina(
     var titulo: String, //[!]
     var html: String, //[!]note
     val criadoPorPessoa: Int,
-    val dataCriacao: OffsetDateTime = OffsetDateTime.now(),
+    var dataCriacao: OffsetDateTime = OffsetDateTime.now(),
     var dataModificacao: OffsetDateTime? = null,
     var ultimaModificacaoPorPessoa: Int? = null
 ) {

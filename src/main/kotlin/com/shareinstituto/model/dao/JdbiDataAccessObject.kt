@@ -8,6 +8,7 @@ import org.jdbi.v3.core.kotlin.*
 import org.jdbi.v3.jackson2.Jackson2Config
 import org.jdbi.v3.jackson2.Jackson2Plugin
 import org.jdbi.v3.postgres.PostgresPlugin
+import java.time.OffsetDateTime
 
 class JdbiDataAccessObject(url: String) : DataAccessObject {
     val jdbi = Jdbi.create(url)
@@ -41,7 +42,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     titulo TEXT NOT NULL,
                     html TEXT NOT NULL,
                     criadoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE,
-                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW(),
+                    dataCriacao TIMESTAMP NOT NULL,
                     dataModificacao TIMESTAMP,
                     ultimaModificacaoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE
                 )
@@ -53,7 +54,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     titulo TEXT NOT NULL,
                     html TEXT NOT NULL,
                     criadoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE,
-                    dataCriacao TIMESTAMP NOT NULL DEFAULT NOW(),
+                    dataCriacao TIMESTAMP NOT NULL,
                     dataModificacao TIMESTAMP,
                     ultimaModificacaoPorPessoa INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE
                 )
@@ -61,7 +62,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
 
             it.execute("""
                 CREATE TABLE IF NOT EXISTS pagini_link(
-                    ordinal INT PRIMARY KEY,
+                    id SERIAL PRIMARY KEY,
                     nome TEXT NOT NULL,
                     href TEXT NOT NULL
                 )
@@ -81,9 +82,9 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     <i>Essa notícia foi automaticamente criada pelo sistema.<br></i></p>""".trimIndent(), adminId)
             }
 
-            if (it.createQuery("SELECT COUNT(ordinal) FROM pagini_link").mapTo<Int>().one() < 1) {
-                insertLink(0, "Home", "/")
-                insertLink(1, "Login", "/login")
+            if (it.createQuery("SELECT COUNT(id) FROM pagini_link").mapTo<Int>().one() < 1) {
+                insertLink("Home", "/")
+                insertLink("Login", "/login")
             }
         }
     }
@@ -128,10 +129,10 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
         }
     }
 
-    override fun getLink(ordinal: Int): Link? {
+    override fun getLink(id: Int): Link? {
         return jdbi.withHandleUnchecked {
-            it.createQuery("SELECT * FROM pagini_link WHERE ordinal = :ordinal")
-                .bind("ordinal", ordinal)
+            it.createQuery("SELECT * FROM pagini_link WHERE id = :id")
+                .bind("id", id)
                 .mapTo<Link>()
                 .findOne()
                 .orElse(null)
@@ -175,7 +176,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
             it.createQuery("SELECT * FROM pagini_link")
                 .mapTo<Link>()
                 .list()
-        }.sortedBy { it.ordinal }
+        }.sortedBy { it.id }
     }
 
     override fun insertUsuario(username: String, password: String, pessoaId: Int, admin: Boolean): Usuario {
@@ -207,10 +208,11 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
 
     override fun insertNoticia(titulo: String, html: String, criadoPorPessoa: Int): Noticia {
         val id = jdbi.withHandleUnchecked {
-            it.createUpdate("INSERT INTO pagini_noticia (titulo, html, criadoPorPessoa) VALUES (:t, :html, :u)")
+            it.createUpdate("INSERT INTO pagini_noticia (titulo, html, criadoPorPessoa, dataCriacao) VALUES (:t, :html, :u, :d)")
                 .bind("t", titulo)
                 .bind("html", html)
                 .bind("u", criadoPorPessoa)
+                .bind("d", OffsetDateTime.now())
                 .executeAndReturnGeneratedKeys()
                 .mapTo<Int>()
                 .one()
@@ -221,27 +223,29 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
 
     override fun insertPagina(linkPagina: String, titulo: String, html: String, criadoPorPessoa: Int): Pagina {
         jdbi.withHandleUnchecked {
-            it.createUpdate("INSERT INTO pagini_pagina (linkPagina, titulo, html, criadoPorPessoa) VALUES (:l, :t, :html, :u)")
+            it.createUpdate("INSERT INTO pagini_pagina (linkPagina, titulo, html, criadoPorPessoa, dataCriacao) VALUES (:l, :t, :html, :u, :d)")
                 .bind("l", linkPagina)
                 .bind("t", titulo)
                 .bind("html", html)
                 .bind("u", criadoPorPessoa)
+                .bind("d", OffsetDateTime.now())
                 .execute()
         }
 
         return Pagina(linkPagina, titulo, html, criadoPorPessoa)
     }
 
-    override fun insertLink(ordinal: Int, nome: String, href: String): Link {
-        jdbi.withHandleUnchecked {
-            it.createUpdate("INSERT INTO pagini_link (ordinal, nome, href) VALUES (:ordinal, :nome, :href)")
-                .bind("ordinal", ordinal)
+    override fun insertLink(nome: String, href: String): Link {
+        val id = jdbi.withHandleUnchecked {
+            it.createUpdate("INSERT INTO pagini_link (nome, href) VALUES (:nome, :href)")
                 .bind("nome", nome)
                 .bind("href", href)
-                .execute()
+                .executeAndReturnGeneratedKeys()
+                .mapTo<Int>()
+                .one()
         }
 
-        return Link(ordinal, nome, href)
+        return Link(id, nome, href)
     }
 
     override fun updateUsuario(usuario: Usuario) {
@@ -307,7 +311,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
 
     override fun updateLink(link: Link) {
         jdbi.useHandleUnchecked {
-            it.createUpdate("UPDATE pagini_link SET nome = :nome, href = :href WHERE ordinal = :ordinal")
+            it.createUpdate("UPDATE pagini_link SET nome = :nome, href = :href WHERE id = :id")
                 .bindKotlin(link)
                 .execute()
         }
@@ -337,9 +341,37 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
         }
     }
 
-    override fun removeLink(ordinal: Int) {
+    override fun removeLink(id: Int) {
         jdbi.useHandleUnchecked {
-            it.execute("DELETE FROM pagini_link WHERE ordinal = ?", ordinal)
+            it.execute("DELETE FROM pagini_link WHERE id = ?", id)
+        }
+    }
+
+    override fun swapLinks(links: Pair<Link, Link>) {
+        jdbi.useHandleUnchecked {
+            it.createUpdate("""
+                UPDATE pagini_link SET
+                    nome = CASE id
+                            WHEN :first.id THEN :second.nome
+                            WHEN :second.id THEN :first.nome
+                        END,
+                    href = CASE id
+                            WHEN :first.id THEN :second.href
+                            WHEN :second.id THEN :first.href
+                        END
+                WHERE id in (:first.id, :second.id)
+                """)
+                .bindKotlin("first", links.first)
+                .bindKotlin("second", links.second)
+                .execute()
+        }
+
+        links.let { (first, second) ->
+            val (_, tmpNome, tmpHref) = first
+            first.nome = second.nome
+            first.href = second.href
+            second.nome = tmpNome
+            second.href = tmpHref
         }
     }
 

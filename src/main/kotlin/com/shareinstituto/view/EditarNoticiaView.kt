@@ -1,8 +1,6 @@
 package com.shareinstituto.view
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.shareinstituto.model.Noticia
-import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.EditarNoticiaViewModel
 import com.shareinstituto.view.base.PagIniAdminView
 import io.javalin.http.Context
 import kotlinx.html.*
@@ -10,12 +8,12 @@ import kotlinx.html.ButtonType.submit
 import kotlinx.html.FormMethod.post
 import kotlinx.html.InputType.text
 
-class EditarNoticiaView(private val mapper: ObjectMapper, dao: DataAccessObject, private val noticia: Noticia?) : PagIniAdminView(dao) {
-    override val pageTitle = if (noticia == null) "Nova Notícia" else "Edição de Notícia"
+class EditarNoticiaView(override val model: EditarNoticiaViewModel) : PagIniAdminView() {
+    override val pageTitle = if (model.editing) "Edição de Notícia" else "Nova Notícia"
 
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
-            h5("underlined") { +"Nova Notícia" }
+            h5("underlined") { +pageTitle }
             form(method = post) {
                 div("row") {
                     div("input-field col s12") {
@@ -26,13 +24,13 @@ class EditarNoticiaView(private val mapper: ObjectMapper, dao: DataAccessObject,
                         input(text, classes = "validate", name = "title") {
                             id = "inputTitle"
                             placeholder = "Título"
-                            noticia?.let { value = it.titulo }
+                            model.noticia?.let { value = it.titulo }
                         }
                     }
 
                     div("col s12") {
                         label { +"Corpo da página" }
-                        textArea(classes ="materialize-textarea") {
+                        textArea(classes = "materialize-textarea") {
                             id = "summernote"
                             name = "html"
                         }
@@ -40,7 +38,7 @@ class EditarNoticiaView(private val mapper: ObjectMapper, dao: DataAccessObject,
 
                     div("col s12 input-field") {
                         button(type = submit, classes = "btn waves-effect light-blue lighten-2") {
-                            +if (noticia == null) "Criar Notícia" else "Editar Notícia"
+                            +if (model.noticia == null) "Criar Notícia" else "Editar Notícia"
                             i("material-icons right") { +"send" }
                         }
                     }
@@ -64,16 +62,26 @@ class EditarNoticiaView(private val mapper: ObjectMapper, dao: DataAccessObject,
             unsafe {
                 +"""
                 $(document).ready(function() {
-                    $('#summernote').summernote({ height: 400, lang: 'pt-BR' });
+                    $('#summernote').summernote({
+                        height: 400, lang: 'pt-BR',
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['fontsize', 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                            ['color', ['forecolor', 'backcolor']],
+                            ['para', ['ul', 'ol', 'paragraph', 'height']],
+                            ['insert', ['table', 'picture', 'video', 'link', 'hr']],
+                            ['view', ['fullscreen', 'codeview']]
+                        ]
+                     });
                 """.trimIndent()
 
-                noticia?.let {
+                model.noticia?.takeIf { it.html.isNotEmpty() }?.let {
                     +"""
-                    $('#summernote').summernote('pasteHTML', ${mapper.writeValueAsString(it.html)});
+                    $('#summernote').summernote('code', ${model.mapper.writeValueAsString(it.html)});
                     """.trimIndent()
                 }
                 +"""
-                })
+                });
                 """.trimIndent()
             }
         }

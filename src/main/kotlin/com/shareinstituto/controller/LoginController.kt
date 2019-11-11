@@ -3,8 +3,10 @@ package com.shareinstituto.controller
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.shareinstituto.controller.security.MainRole
+import com.shareinstituto.controller.security.ShareAccessManager
 import com.shareinstituto.model.Usuario
 import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.PagIniModel
 import com.shareinstituto.view.LoginView
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.ApiBuilder.post
@@ -32,7 +34,8 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
 
     private fun login(ctx: Context) {
         val then = ctx.queryParam("then")?.let { URLDecoder.decode(it, Charsets.UTF_8) }
-        when (ctx.sessionAttribute<MainRole>("USER_ROLE") ?: MainRole.ANYONE) {
+
+        when (ShareAccessManager.getRole(ctx.sessionAttribute<Usuario>("USER"))) {
             MainRole.ANYONE -> {
                 val jwtToken = ctx.cookie("ulovecookies")
 
@@ -50,9 +53,9 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
                         }
                 }
 
-                LoginView(dao).render(ctx)
+                LoginView(PagIniModel(dao.allLinks())).render(ctx)
             }
-            MainRole.ADMIN -> ctx.redirect(then ?: "/admin")
+            else -> ctx.redirect(then ?: "/admin")
         }
     }
 
@@ -82,13 +85,13 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
     }
 
     private fun doLogout(ctx: Context) {
-        ctx.sessionAttribute("USER_ROLE", MainRole.ANYONE)
+        ctx.sessionAttribute("USER", null)
         ctx.removeCookie("ulovecookies")
         ctx.redirect("/")
     }
 
     private fun loginRoutine(ctx: Context, u: Usuario, rememberMe: Boolean) {
-        ctx.sessionAttribute("USER_NAME", u.username)
+        ctx.sessionAttribute("USER", u)
         val then = (ctx.formParam("then") ?: ctx.queryParam("then"))?.let { URLDecoder.decode(it, Charsets.UTF_8) }
 
         if (rememberMe) {
@@ -101,7 +104,6 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
                 .sign(direct.instance())
             ctx.cookie("ulovecookies", jwt, TimeUnit.DAYS.toMillis(60).toInt())
         }
-        ctx.sessionAttribute("USER_ROLE", MainRole.ADMIN)
         ctx.redirect(then ?: "/admin")
     }
 }

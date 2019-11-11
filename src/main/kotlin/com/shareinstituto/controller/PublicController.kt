@@ -1,6 +1,9 @@
 package com.shareinstituto.controller
 
 import com.shareinstituto.model.dao.DataAccessObject
+import com.shareinstituto.model.page.IndexViewModel
+import com.shareinstituto.model.page.NoticiaViewModel
+import com.shareinstituto.model.page.PaginaViewModel
 import com.shareinstituto.view.IndexView
 import com.shareinstituto.view.NoticiaView
 import com.shareinstituto.view.PaginaView
@@ -18,21 +21,37 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
     override fun addEndpoints() {
         get(::index)
         get("n/:noticia", ::noticia)
-        get("p/:page", ::page)
+        get("p/:pagina", ::pagina)
     }
 
     fun index(ctx: Context) {
         val p = ctx.queryParam("p")?.toIntOrNull()?.coerceAtLeast(0) ?: 0
-        IndexView(p, dao).render(ctx)
+
+        val cards = dao.paginateNoticias(0).take(3)
+        val noticias = dao.paginateNoticias(p)
+        val pessoas = noticias.flatMap { listOfNotNull(it.criadoPorPessoa, it.ultimaModificacaoPorPessoa) }.toSet()
+            .mapNotNull { dao.getPessoa(it)?.let { p -> it to p } }.toMap()
+
+        IndexView(IndexViewModel(dao.allLinks(), p, cards, noticias, pessoas)).render(ctx)
     }
 
     fun noticia(ctx: Context) {
         val id = ctx.pathParam("noticia").toInt()
-        NoticiaView(dao, dao.getNoticia(id) ?: throw NotFoundResponse()).render(ctx)
+
+        val noticia = dao.getNoticia(id) ?: throw NotFoundResponse()
+
+        NoticiaView(
+            NoticiaViewModel(
+                dao.allLinks(),
+                noticia,
+                dao.getPessoa(noticia.criadoPorPessoa),
+                noticia.ultimaModificacaoPorPessoa?.let(dao::getPessoa)
+            )
+        ).render(ctx)
     }
 
-    fun page(ctx: Context) {
-        val linkPagina = ctx.pathParam("page")
-        PaginaView(dao, dao.getPagina(linkPagina) ?: throw NotFoundResponse()).render(ctx)
+    fun pagina(ctx: Context) {
+        val linkPagina = ctx.pathParam("pagina")
+        PaginaView(PaginaViewModel(dao.allLinks(), dao.getPagina(linkPagina) ?: throw NotFoundResponse())).render(ctx)
     }
 }

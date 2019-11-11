@@ -1,6 +1,7 @@
 package com.shareinstituto.controller.security
 
-import com.shareinstituto.controller.security.MainRole.ANYONE
+import com.shareinstituto.controller.security.MainRole.*
+import com.shareinstituto.model.Usuario
 import io.javalin.core.security.AccessManager
 import io.javalin.core.security.Role
 import io.javalin.http.Context
@@ -14,14 +15,23 @@ class ShareAccessManager : AccessManager {
         if (permittedRoles.isEmpty()) {
             handler.handle(ctx)
         } else {
-            val role = ctx.sessionAttribute<MainRole>("USER_ROLE") ?: ANYONE
-            if (role in permittedRoles) {
-                handler.handle(ctx)
-            } else if (role == ANYONE) {
-                val thenUrl = listOfNotNull(ctx.path(), ctx.queryString()).joinToString("?")
-                ctx.redirect("/login?err=unauthorized&then=${urlEncode(thenUrl, UTF_8)}")
-            } else {
-                throw ForbiddenResponse()
+            when (getRole(ctx.sessionAttribute<Usuario>("USER"))) {
+                in permittedRoles -> handler.handle(ctx)
+                ANYONE -> {
+                    val thenUrl = listOfNotNull(ctx.path(), ctx.queryString()).joinToString("?")
+                    ctx.redirect("/login?err=unauthorized&then=${urlEncode(thenUrl, UTF_8)}")
+                }
+                else -> throw ForbiddenResponse()
+            }
+        }
+    }
+
+    companion object {
+        fun getRole(usuario: Usuario?): MainRole {
+            return when (usuario?.admin) {
+                true -> SUPERADMIN
+                false -> ADMIN
+                else -> ANYONE
             }
         }
     }
