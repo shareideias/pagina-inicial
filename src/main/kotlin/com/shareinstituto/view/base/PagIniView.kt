@@ -54,7 +54,26 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
             opgProperty("og:image", "https://associacaoshare.com.br/img/card.png")
             opgProperty("og:locale", "pt_BR")
 
-            link("/img/globo.png", "icon")
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-57x57.png") { attributes["sizes"] = "57x57" }
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-114x114.png") { attributes["sizes"] = "114x114" }
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-72x72.png") { attributes["sizes"] = "72x72" }
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-144x144.png") { attributes["sizes"] = "144x144" }
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-60x60.png") { attributes["sizes"] = "60x60" }
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-120x120.png") { attributes["sizes"] = "120x120" }
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-76x76.png") { attributes["sizes"] = "76x76" }
+            link(rel = "apple-touch-icon-precomposed", href = "/apple-touch-icon-152x152.png") { attributes["sizes"] = "152x152" }
+            link(rel = "icon", type = "image/png", href = "/favicon-196x196.png") { attributes["sizes"] = "196x196" }
+            link(rel = "icon", type = "image/png", href = "/favicon-96x96.png") { attributes["sizes"] = "96x96" }
+            link(rel = "icon", type = "image/png", href = "/favicon-32x32.png") { attributes["sizes"] = "32x32" }
+            link(rel = "icon", type = "image/png", href = "/favicon-16x16.png") { attributes["sizes"] = "16x16" }
+            link(rel = "icon", type = "image/png", href = "/favicon-128.png") { attributes["sizes"] = "128x128" }
+            meta(name = "application-name", content = "Associação Share")
+            meta(name = "msapplication-TileColor", content = "#FFFFFF")
+            meta(name = "msapplication-TileImage", content = "/mstile-144x144.png")
+            meta(name = "msapplication-square70x70logo", content = "/mstile-70x70.png")
+            meta(name = "msapplication-square150x150logo", content = "/mstile-150x150.png")
+            meta(name = "msapplication-wide310x150logo", content = "/mstile-310x150.png")
+            meta(name = "msapplication-square310x310logo", content = "/mstile-310x310.png")
         }
         body {
             header { renderHeader() }
