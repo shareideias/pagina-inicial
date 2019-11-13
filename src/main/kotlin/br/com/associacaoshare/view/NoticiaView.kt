@@ -30,7 +30,7 @@ class NoticiaView(override val model: NoticiaViewModel) : PagIniView(PUBLIC_PAGE
                     h5("underlined") { +"Sobre nós:" }
                     p("par_news") {
                         +"A Share é uma Entidade Estudantil fundada em 2016 por alunos de Ciências Econômicas na"
-                        +" UFSCar - Campus Sorocaba, com o intuito de conectar a vontade de ensinar com a vontade de aprender."
+                        +" UFSCar - Campus Sorocaba, com o intuito de conectar o desejo de ensinar com a vontade de aprender."
                         +" Para isso oferecemos semestralmente cursos de idioma, culturais e administrativos, além de eventos,"
                         +" tudo isso de forma acessível e com certificado."
                         +" Contamos com professores voluntários e 7 áreas administrativas voluntárias"

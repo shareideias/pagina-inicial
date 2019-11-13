@@ -1,9 +1,6 @@
 package br.com.associacaoshare
 
-import br.com.associacaoshare.controller.AdminController
-import br.com.associacaoshare.controller.ErrorHandler
-import br.com.associacaoshare.controller.LoginController
-import br.com.associacaoshare.controller.PublicController
+import br.com.associacaoshare.controller.*
 import br.com.associacaoshare.controller.security.ShareAccessManager
 import br.com.associacaoshare.model.dao.DataAccessObject
 import br.com.associacaoshare.model.dao.JdbiDataAccessObject
@@ -42,6 +39,7 @@ fun main() {
         PublicController(kodein).addEndpoints()
         LoginController(kodein).addEndpoints()
         path("admin") { AdminController(kodein).addEndpoints() }
+        path("api") { APIController(kodein).addEndpoints() }
     }
     ErrorHandler(kodein).run { app.addErrorHandlers() }
     app.start(port)
