@@ -11,6 +11,7 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
         INDEX(listOf("public", "index")),
         LOGIN(listOf("login")),
         PUBLIC_PAGE(listOf("public")),
+        ERROR_PAGE(listOf("public", "error")),
         ADMIN_PAGE(emptyList())
     }
 
@@ -30,11 +31,28 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
             }
             afterLinks(ctx)
 
-            if (pageTitle != null) {
-                title("Associação Share · $pageTitle")
-            } else {
+            link("https://associacaoshare.com.br/${ctx.path()}", "canonical")
+
+            meta("author", "Associação Share")
+            meta("description", "A Share é uma Entidade Estudantil fundada em 2016 por alunos de Ciências Econômicas na UFSCar - Campus Sorocaba, com o intuito de conectar a vontade de ensinar com a vontade de aprender oferecendo cursos semestrais de idioma, culturais e administrativos.")
+            meta("keywords", "Associação Share, UFSCar Sorocaba, Centro Línguas, Instituto Share; Share Ideias")
+
+            meta("twitter:card", "summary")
+
+            if (pageTitle.isNullOrBlank()) {
                 title("Associação Share")
+                opgProperty("og:title", "Página sem título")
+                opgProperty("og:site_name", "Associação Share")
+            } else {
+                title("Associação Share · $pageTitle")
+                opgProperty("og:title", "$pageTitle")
+                opgProperty("og:site_name", "Associação Share")
             }
+
+            opgProperty("og:type", "website")
+            opgProperty("og:url", "https://associacaoshare.com.br/${ctx.path()}")
+            opgProperty("og:image", "https://associacaoshare.com.br/img/card.png")
+            opgProperty("og:locale", "pt_BR")
 
             link("/img/globo.png", "icon")
         }
@@ -81,7 +99,6 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
                     model.navLinks.forEach { li { a(it.href) { +it.nome } } }
                 }
             }
-
         }
         if (type == Type.INDEX) {
             img("'Share' em Manuscrito", "/img/share-handwritten.png", "handwritten-logo")
@@ -100,5 +117,12 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
     private fun BODY.renderScripts() {
         script(src = "/js/materialize.min.js") {}
         script(src = "/js/m_sidenav.js") {}
+    }
+
+    private fun MetaDataContent.opgProperty(property: String, content: String) {
+        meta {
+            attributes["property"] = property
+            attributes["content"] = content
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.shareinstituto.controller
 
+import com.shareinstituto.controller.security.ContentType
+import com.shareinstituto.controller.security.NotFoundException
 import com.shareinstituto.model.dao.DataAccessObject
 import com.shareinstituto.model.page.IndexViewModel
 import com.shareinstituto.model.page.NoticiaViewModel
@@ -10,7 +12,6 @@ import com.shareinstituto.view.PaginaView
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.EndpointGroup
 import io.javalin.http.Context
-import io.javalin.http.NotFoundResponse
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
@@ -21,7 +22,11 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
     override fun addEndpoints() {
         get(::index)
         get("n/:noticia", ::noticia)
-        get("p/:pagina", ::pagina)
+        get("p/:p1", ::pagina)
+        get("p/:p1/:p2", ::pagina)
+        get("p/:p1/:p2/:p3", ::pagina)
+        get("p/:p1/:p2/:p3/:p4", ::pagina)
+        get("p/:p1/:p2/:p3/:p4/:p5", ::pagina)
     }
 
     fun index(ctx: Context) {
@@ -36,9 +41,9 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
     }
 
     fun noticia(ctx: Context) {
-        val id = ctx.pathParam("noticia").toInt()
+        val id = ctx.pathParam("noticia").toIntOrNull() ?: throw NotFoundException(false, ContentType.NOTICIA)
 
-        val noticia = dao.getNoticia(id) ?: throw NotFoundResponse()
+        val noticia = dao.getNoticia(id) ?: throw NotFoundException(false, ContentType.NOTICIA)
 
         NoticiaView(
             NoticiaViewModel(
@@ -51,7 +56,8 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
     }
 
     fun pagina(ctx: Context) {
-        val linkPagina = ctx.pathParam("pagina")
-        PaginaView(PaginaViewModel(dao.allLinks(), dao.getPagina(linkPagina) ?: throw NotFoundResponse())).render(ctx)
+        val linkPagina = ctx.pathParamMap().asSequence().sortedBy { it.key }.joinToString("/") { it.value }
+        val pagina = dao.getPagina(linkPagina) ?: throw NotFoundException(false, ContentType.PAGINA)
+        PaginaView(PaginaViewModel(dao.allLinks(), pagina)).render(ctx)
     }
 }

@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.shareinstituto.controller.AdminController
+import com.shareinstituto.controller.ErrorHandler
 import com.shareinstituto.controller.LoginController
 import com.shareinstituto.controller.PublicController
 import com.shareinstituto.controller.security.ShareAccessManager
@@ -42,5 +43,6 @@ fun main() {
         LoginController(kodein).addEndpoints()
         path("admin") { AdminController(kodein).addEndpoints() }
     }
+    ErrorHandler(kodein).run { app.addErrorHandlers() }
     app.start(port)
 }

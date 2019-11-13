@@ -1,8 +1,10 @@
 package com.shareinstituto.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.shareinstituto.controller.security.ContentType
 import com.shareinstituto.controller.security.MainRole.ADMIN
 import com.shareinstituto.controller.security.MainRole.SUPERADMIN
+import com.shareinstituto.controller.security.UnableToEditException
 import com.shareinstituto.model.Pagina
 import com.shareinstituto.model.Usuario
 import com.shareinstituto.model.dao.DataAccessObject
@@ -100,16 +102,14 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
 
     fun editarPagina(ctx: Context) {
         val linkPagina = ctx.pathParam("pagina")
-        val pagina = dao.getPagina(linkPagina)
-            ?: throw NoSuchElementException("GET editarPagina: $linkPagina is not valid.")
+        val pagina = dao.getPagina(linkPagina) ?: throw UnableToEditException(true, ContentType.PAGINA)
 
         EditarPaginaView(EditarPaginaViewModel(mapper, pagina, true)).render(ctx)
     }
 
     fun salvarEdicaoPagina(ctx: Context) {
         val linkPagina = ctx.pathParam("pagina")
-        val pagina = dao.getPagina(linkPagina)
-            ?: throw NoSuchElementException("POST editarPagina: $linkPagina is not valid.")
+        val pagina = dao.getPagina(linkPagina) ?: throw UnableToEditException(true, ContentType.PAGINA)
 
         val title = ctx.formParam("title")
         val novoLinkPagina = ctx.formParam("linkPagina")
@@ -137,18 +137,16 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
 
     fun editarNoticia(ctx: Context) {
         val noticiaId = ctx.pathParam("noticia")
-        val id = noticiaId.toIntOrNull()
-            ?: throw IllegalArgumentException("GET editarNoticia: $noticiaId is not an integer.")
-        val noticia = dao.getNoticia(id) ?: throw NoSuchElementException("GET editarNoticia: $id is not valid.")
+        val id = noticiaId.toIntOrNull() ?: throw UnableToEditException(true, ContentType.NOTICIA)
+        val noticia = dao.getNoticia(id) ?: throw UnableToEditException(true, ContentType.NOTICIA)
 
         EditarNoticiaView(EditarNoticiaViewModel(mapper, noticia, true)).render(ctx)
     }
 
     fun salvarEdicaoNoticia(ctx: Context) {
         val noticiaId = ctx.pathParam("noticia")
-        val id = noticiaId.toIntOrNull()
-            ?: throw IllegalArgumentException("POST editarNoticia: $noticiaId is not an integer.")
-        val noticia = dao.getNoticia(id) ?: throw NoSuchElementException("POST editarNoticia: $id is not valid.")
+        val id = noticiaId.toIntOrNull() ?: throw UnableToEditException(true, ContentType.NOTICIA)
+        val noticia = dao.getNoticia(id) ?: throw UnableToEditException(true, ContentType.NOTICIA)
 
         val title = ctx.formParam("title")
         val html = ctx.formParam("html")
@@ -168,7 +166,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
 
     fun removerPagina(ctx: Context) {
         val linkPagina = ctx.pathParam("pagina")
-        dao.getPagina(linkPagina) ?: throw NoSuchElementException("GET removerPagina: $linkPagina is not valid.")
+        dao.getPagina(linkPagina) ?: throw UnableToEditException(true, ContentType.PAGINA)
 
         dao.removePagina(linkPagina)
         ctx.redirect("/admin?removerPagina=success")
@@ -176,9 +174,8 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
 
     fun removerNoticia(ctx: Context) {
         val noticiaId = ctx.pathParam("noticia")
-        val id = noticiaId.toIntOrNull()
-            ?: throw IllegalArgumentException("GET removerNoticia: $noticiaId is not an integer.")
-        dao.getNoticia(id) ?: throw NoSuchElementException("GET removerNoticia: $id is not valid.")
+        val id = noticiaId.toIntOrNull() ?: throw UnableToEditException(true, ContentType.NOTICIA)
+        dao.getNoticia(id) ?: throw UnableToEditException(true, ContentType.NOTICIA)
 
         dao.removeNoticia(id)
         ctx.redirect("/admin?removerNoticia=success")

@@ -10,6 +10,6 @@ abstract class HtmlBuilderView : View {
 
     override fun render(ctx: Context) {
         ctx.contentType("text/html")
-        ctx.res.writer.appendHTML().html { render(ctx) }
+        ctx.res.writer.appendHTML().html { render(ctx) }.close()
     }
 }

@@ -4,8 +4,15 @@ header {
 }
 
 .share-brand {
-    height: 65px;
+    height: 56px;
     padding: .1em;
+}
+
+@media only screen and (min-width: 601px) {
+    .share-brand {
+        height: 64px;
+        padding: .1em;
+    }
 }
 
 /* All <p> tags are now justified by default. */
