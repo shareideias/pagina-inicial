@@ -31,7 +31,7 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
             }
             afterLinks(ctx)
 
-            link("https://associacaoshare.com.br/${ctx.path()}", "canonical")
+            link("https://associacaoshare.com.br${ctx.path()}", "canonical")
 
             meta("author", "Associação Share")
             meta("description", "A Share é uma Entidade Estudantil fundada em 2016 por alunos de Ciências Econômicas na UFSCar - Campus Sorocaba, com o intuito de conectar a vontade de ensinar com a vontade de aprender oferecendo cursos semestrais de idioma, culturais e administrativos.")
@@ -39,18 +39,26 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
 
             meta("twitter:card", "summary")
 
-            if (pageTitle.isNullOrBlank()) {
-                title("Associação Share")
-                opgProperty("og:title", "Página sem título")
-                opgProperty("og:site_name", "Associação Share")
-            } else {
-                title("Associação Share · $pageTitle")
-                opgProperty("og:title", "$pageTitle")
-                opgProperty("og:site_name", "Associação Share")
+            when {
+                pageTitle.isNullOrBlank() -> {
+                    title("Associação Share")
+                    opgProperty("og:title", "Página sem título")
+                    opgProperty("og:site_name", "Associação Share")
+                }
+                type == Type.INDEX -> {
+                    title("Associação Share · $pageTitle")
+                    opgProperty("og:title", "Associação Share")
+                    opgProperty("og:site_name", "Associação Share")
+                }
+                else -> {
+                    title("Associação Share · $pageTitle")
+                    opgProperty("og:title", "$pageTitle")
+                    opgProperty("og:site_name", "Associação Share")
+                }
             }
 
             opgProperty("og:type", "website")
-            opgProperty("og:url", "https://associacaoshare.com.br/${ctx.path()}")
+            opgProperty("og:url", "https://associacaoshare.com.br${ctx.path()}")
             opgProperty("og:image", "https://associacaoshare.com.br/img/card.png")
             opgProperty("og:locale", "pt_BR")
 
