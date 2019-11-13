@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,8 +7,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-group = "com.shareinstituto"
-version = "1.0.1"
+group = "br.com.associacaoshare"
+version = "1.0.2"
 
 repositories {
     jcenter()
@@ -36,5 +37,11 @@ tasks.withType<KotlinCompile> {
 }
 
 application {
-    mainClassName = "com.shareinstituto.PaginaInicialKt"
+    mainClassName = "br.com.associacaoshare.PagIniKt"
+}
+
+
+tasks.withType<ShadowJar> {
+    exclude("about.html", "jetty-dir.css", "module-info.class")
+    exclude("META-INF/LICENSE", "META-INF/LICENSE.txt", "META-INF/NOTICE", "META-INF/NOTICE.txt", "META-INF/README.md", "META-INF/CHANGES", "META-INF/maven/**")
 }

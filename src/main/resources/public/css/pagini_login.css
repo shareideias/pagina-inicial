@@ -40,8 +40,9 @@ main {
 }
 
 .loginbox-img {
-    width: 18ch;
+    height: 18ch;
     display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 1em;
 }
