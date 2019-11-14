@@ -1,13 +1,19 @@
 package br.com.associacaoshare.model.page
 
-import br.com.associacaoshare.model.Link
-import br.com.associacaoshare.model.Noticia
-import br.com.associacaoshare.model.Pagina
-import br.com.associacaoshare.model.Pessoa
+import br.com.associacaoshare.model.*
 
-class AdminViewModel(
+open class AdminViewModel(
     val noticias: List<Noticia>,
     val paginas: List<Pagina>,
-    val pessoas: Map<Int, Pessoa>,
+    val pessoaMap: Map<Int, Pessoa>,
     val links: List<Link>
 ) : PagIniAdminModel()
+
+class SuperAdminViewModel(
+    val self: Usuario,
+    val pessoas: List<Pair<Pessoa, Usuario?>>,
+    noticias: List<Noticia>,
+    paginas: List<Pagina>,
+    pessoaMap: Map<Int, Pessoa>,
+    links: List<Link>
+) : AdminViewModel(noticias, paginas, pessoaMap, links)

@@ -31,6 +31,7 @@ fun main() {
     }
 
     val app = Javalin.create { cfg ->
+        cfg.showJavalinBanner = false
         cfg.accessManager(ShareAccessManager())
         cfg.addStaticFiles("public")
     }
@@ -38,7 +39,10 @@ fun main() {
     app.routes {
         PublicController(kodein).addEndpoints()
         LoginController(kodein).addEndpoints()
-        path("admin") { AdminController(kodein).addEndpoints() }
+        path("admin") {
+            AdminController(kodein).addEndpoints()
+            SuperAdminController(kodein).addEndpoints()
+        }
         path("api") { APIController(kodein).addEndpoints() }
     }
     ErrorHandler(kodein).run { app.addErrorHandlers() }

@@ -1,6 +1,7 @@
 package br.com.associacaoshare.view
 
 import br.com.associacaoshare.model.page.AdminViewModel
+import br.com.associacaoshare.model.page.SuperAdminViewModel
 import br.com.associacaoshare.utils.forEachNeighbouring
 import br.com.associacaoshare.view.base.PagIniAdminView
 import io.javalin.http.Context
@@ -14,10 +15,22 @@ class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
     override fun MAIN.renderMain(ctx: Context) {
         div("container") {
             h4("underlined") { +"Administração" }
-            div("row") {
-                div("col s12 m4") { collumn1() }
-                div("col s12 m4") { collumn2() }
-                div("col s12 m4") { collumn3() }
+            if (model is SuperAdminViewModel) {
+                div("row") {
+                    div("col s12 m6") { collumn1() }
+                    div("col s12 m6") { collumn2() }
+                }
+                div("hr underlined")
+                div("row") {
+                    div("col s12 m6") { collumn3() }
+                    div("col s12 m6") { collumn4() }
+                }
+            } else {
+                div("row") {
+                    div("col s12 m4") { collumn1() }
+                    div("col s12 m4") { collumn2() }
+                    div("col s12 m4") { collumn3() }
+                }
             }
         }
     }
@@ -44,7 +57,7 @@ class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
                     }
                     p {
                         +"Criado por "
-                        b { +(model.pessoas[noticia.criadoPorPessoa]?.nome ?: "Usuário removido") }
+                        b { +(model.pessoaMap[noticia.criadoPorPessoa]?.nome ?: "Usuário removido") }
                     }
                     p {
                         +"Em "
@@ -53,7 +66,7 @@ class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
                     if (noticia.ultimaModificacaoPorPessoa != null && noticia.dataModificacao != null) {
                         p {
                             +"Ultima modificação por "
-                            b { +(model.pessoas[noticia.ultimaModificacaoPorPessoa!!]?.nome ?: "Usuário removido") }
+                            b { +(model.pessoaMap[noticia.ultimaModificacaoPorPessoa!!]?.nome ?: "Usuário removido") }
                         }
                         p {
                             +"Em "
@@ -96,7 +109,7 @@ class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
                     }
                     p {
                         +"Criado por "
-                        b { +(model.pessoas[pagina.criadoPorPessoa]?.nome ?: "Usuário removido") }
+                        b { +(model.pessoaMap[pagina.criadoPorPessoa]?.nome ?: "Usuário removido") }
                     }
                     p {
                         +"Em "
@@ -105,7 +118,7 @@ class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
                     if (pagina.ultimaModificacaoPorPessoa != null && pagina.dataModificacao != null) {
                         p {
                             +"Ultima modificação por "
-                            b { +(model.pessoas[pagina.ultimaModificacaoPorPessoa!!]?.nome ?: "Usuário removido") }
+                            b { +(model.pessoaMap[pagina.ultimaModificacaoPorPessoa!!]?.nome ?: "Usuário removido") }
                         }
                         p {
                             +"Em "
@@ -126,14 +139,13 @@ class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
 
     }
 
-
     private fun DIV.collumn3() {
         h5 { +"Links" }
 
         ul("collection") {
             model.links.forEachNeighbouring { (link, before, after) ->
                 li("collection-item avatar") {
-                    i("material-icons circle") { +"short_text" }
+                    i("material-icons circle") { +"link" }
                     span("title") { +link.nome }
                     p {
                         +"Aponta para "
@@ -189,6 +201,129 @@ class AdminView(override val model: AdminViewModel) : PagIniAdminView() {
                 }
             }
         }
+    }
 
+    private fun DIV.collumn4() {
+        h5 { +"Usuários" }
+
+        val model = model as SuperAdminViewModel
+
+        ul("collection") {
+            for ((pessoa, usuario) in model.pessoas) {
+                li("collection-item avatar") {
+                    i("material-icons circle") {
+                        if (usuario != null) {
+                            if (usuario.admin) {
+                                +"supervisor_account"
+                            } else {
+                                +"person"
+                            }
+                        } else {
+                            +"person_outline"
+                        }
+                    }
+                    span("title") { +pessoa.nome }
+                    if (usuario != null) {
+                        p {
+                            +"Conectado ao nome de usuário "
+                            code("blue lighten-5") { +usuario.username }
+                        }
+                        if (usuario.admin) {
+                            p {
+                                +"É um super-usuário."
+                            }
+                        }
+                    } else {
+                        p {
+                            +"Não conectado a nenhum usuário. "
+                            a("/admin/linkUsuario/${pessoa.id}") {
+                                +"Clique aqui para criar um usuário."
+                            }
+                        }
+                        p {
+                            small {
+                                strong { +"Aviso: " }
+                                +"Excluir esse usuário excluirá todas as páginas e notícias que ele criou ou editou."
+                            }
+                        }
+                    }
+                    div("secondary-content") {
+
+                        a("/admin/editarUsuario/${pessoa.id}") {
+                            i("material-icons") { +"edit" }
+                        }
+                        if (usuario?.username != model.self.username) {
+                            if (usuario != null) {
+                                a("/admin/unlinkUsuario/${pessoa.id}") {
+                                    i("material-icons") { +"remove_circle" }
+                                }
+                            } else {
+                                a("/admin/removerPessoa/${pessoa.id}") {
+                                    i("material-icons") { +"delete" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        br
+
+        div("card") {
+            form("/admin/novoUsuario", method = post, classes = "card-content") {
+                span("card-title") { +"Novo Usuário" }
+                div("row mb-0") {
+                    div("input-field col s12 mb-0") {
+                        label {
+                            htmlFor = "inputNome"
+                            +"Nome Completo"
+                        }
+                        input(InputType.text, classes = "validate", name = "nome") {
+                            id = "inputNome"
+                            placeholder = "Nome Completo"
+                        }
+                    }
+
+                    div("input-field col s12 mb-0") {
+                        label {
+                            htmlFor = "inputUsername"
+                            +"Nome de usuário"
+                        }
+                        input(InputType.text, classes = "validate", name = "username") {
+                            id = "inputUsername"
+                            placeholder = "Nome de usuário"
+                        }
+                    }
+
+                    div("input-field col s12 mb-0") {
+                        label {
+                            htmlFor = "inputPassword"
+                            +"Senha"
+                        }
+                        input(InputType.password, classes = "validate", name = "password") {
+                            id = "inputPassword"
+                            placeholder = "Senha"
+                        }
+                    }
+
+                    div("input-field col s12 mb-0") {
+                        p {
+                            label {
+                                checkBoxInput(name = "superadmin")
+                                span { +"Dar superpoderes" }
+                            }
+                        }
+                    }
+
+                    div("input-field col s12 mb-0") {
+                        button(type = ButtonType.submit, classes = "btn waves-effect light-blue lighten-2") {
+                            +"Criar Usuário"
+                            i("material-icons right") { +"send" }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

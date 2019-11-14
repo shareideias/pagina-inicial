@@ -31,7 +31,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 CREATE TABLE IF NOT EXISTS pagini_usuario(
                     username TEXT PRIMARY KEY,
                     hash TEXT NOT NULL,
-                    pessoaId INT REFERENCES pagini_pessoa(id) ON DELETE CASCADE,
+                    pessoaId INT UNIQUE REFERENCES pagini_pessoa(id) ON DELETE CASCADE,
                     admin BOOLEAN DEFAULT FALSE
                 )
                 """.trimIndent())
@@ -74,7 +74,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                 insertNoticia("Bem-vindo a Share!", """
                     <p align="justify">Seja bem-vindo ao site da Associação Share!<br></p>
                     <p class="par_news" align="justify">A Share é uma Entidade Estudantil fundada em 2016 por alunos de
-                    Ciências Econômicas na UFSCar - Campus Sorocaba, com o intuito de conectar a vontade de ensinar com
+                    Ciências Econômicas na UFSCar - Campus Sorocaba, com o intuito de conectar o desejo de ensinar com
                     a vontade de aprender. Para isso oferecemos semestralmente cursos de idioma, culturais e
                     administrativos, além de eventos, tudo isso de forma acessível e com certificado. Contamos com
                     professores voluntários e 7 áreas administrativas voluntárias dos quais ajudam a fazer o
@@ -89,21 +89,31 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
         }
     }
 
-    override fun getPessoa(id: Int): Pessoa? {
-        return jdbi.withHandleUnchecked {
-            it.createQuery("SELECT * FROM pagini_pessoa WHERE id = :id")
-                .bind("id", id)
-                .mapTo<Pessoa>()
-                .findOne()
-                .orElse(null)
-        }
-    }
-
     override fun getUsuario(username: String): Usuario? {
         return jdbi.withHandleUnchecked {
             it.createQuery("SELECT * FROM pagini_usuario WHERE username = :username")
                 .bind("username", username)
                 .mapTo<Usuario>()
+                .findOne()
+                .orElse(null)
+        }
+    }
+
+    override fun getUsuarioByPessoa(pessoaId: Int): Usuario? {
+        return jdbi.withHandleUnchecked {
+            it.createQuery("SELECT * FROM pagini_usuario WHERE pessoaId = :pessoaId")
+                .bind("pessoaId", pessoaId)
+                .mapTo<Usuario>()
+                .findOne()
+                .orElse(null)
+        }
+    }
+
+    override fun getPessoa(id: Int): Pessoa? {
+        return jdbi.withHandleUnchecked {
+            it.createQuery("SELECT * FROM pagini_pessoa WHERE id = :id")
+                .bind("id", id)
+                .mapTo<Pessoa>()
                 .findOne()
                 .orElse(null)
         }

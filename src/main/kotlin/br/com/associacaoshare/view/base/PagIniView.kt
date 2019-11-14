@@ -136,7 +136,7 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
         ul("social-networks") {
             li { a("https://www.facebook.com/shareideias/", classes = "img-fb") { +"Facebook" } }
             li { a("https://www.instagram.com/shareideias/", classes = "img-ig") { +"Instagram" } }
-            li { a("https://www.linkedin.com/in/shareideias/", classes = "img-ln") { +"LinkedIn" } }
+            li { a("https://www.linkedin.com/company/associacaoshare/", classes = "img-ln") { +"LinkedIn" } }
         }
         p("center-align bold") { +"© Share. Todos os direitos reservados." }
     }

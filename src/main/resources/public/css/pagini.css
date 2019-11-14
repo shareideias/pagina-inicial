@@ -30,6 +30,10 @@ p, .justify {
     margin: .75rem 0;
 }
 
+.underlined.hr {
+    padding: 0;
+}
+
 /* background color support on <code> tags */
 code {
     padding: 2px;

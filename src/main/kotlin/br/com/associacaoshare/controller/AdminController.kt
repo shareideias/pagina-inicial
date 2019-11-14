@@ -7,13 +7,12 @@ import br.com.associacaoshare.controller.security.UnableToEditException
 import br.com.associacaoshare.model.Pagina
 import br.com.associacaoshare.model.Usuario
 import br.com.associacaoshare.model.dao.DataAccessObject
-import br.com.associacaoshare.model.page.AdminViewModel
-import br.com.associacaoshare.model.page.EditarNoticiaViewModel
-import br.com.associacaoshare.model.page.EditarPaginaViewModel
+import br.com.associacaoshare.model.page.*
 import br.com.associacaoshare.utils.brazilZone
 import br.com.associacaoshare.view.AdminView
 import br.com.associacaoshare.view.EditarNoticiaView
 import br.com.associacaoshare.view.EditarPaginaView
+import br.com.associacaoshare.view.EditarUsuarioView
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.ApiBuilder.post
@@ -53,17 +52,26 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         post("novoLink", ::novoLink, requiredRole)
         get("swapLinks", ::swapLinks, requiredRole)
         get("deleteLink", ::deleteLink, requiredRole)
+
+        get("perfil", ::perfil, requiredRole)
+        post("perfil", ::salvarPerfil, requiredRole)
     }
 
     fun admin(ctx: Context) {
         val noticias = dao.allNoticias()
         val paginas = dao.allPaginas()
-        val pessoas = listOf(
+        val pessoaMap = listOf(
             noticias.flatMap { listOfNotNull(it.criadoPorPessoa, it.ultimaModificacaoPorPessoa) },
             paginas.flatMap { listOfNotNull(it.criadoPorPessoa, it.ultimaModificacaoPorPessoa) }
         ).flatten().toSet().mapNotNull { dao.getPessoa(it)?.let { p -> it to p } }.toMap()
 
-        AdminView(AdminViewModel(noticias, paginas, pessoas, dao.allLinks())).render(ctx)
+        val self = ctx.sessionAttribute<Usuario>("USER")!!
+        if (self.admin) {
+            val pessoas = dao.allPessoas().map { it to dao.getUsuarioByPessoa(it.id) }
+            AdminView(SuperAdminViewModel(self, pessoas, noticias, paginas, pessoaMap, dao.allLinks())).render(ctx)
+        } else {
+            AdminView(AdminViewModel(noticias, paginas, pessoaMap, dao.allLinks())).render(ctx)
+        }
     }
 
     fun novaPagina(ctx: Context) {
@@ -75,7 +83,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         val linkPagina = ctx.formParam("linkPagina")
         val html = ctx.formParam("html")
 
-        if (title != null && linkPagina != null && html != null) {
+        if (!title.isNullOrBlank() && !linkPagina.isNullOrBlank() && !html.isNullOrBlank()) {
             dao.insertPagina(linkPagina, title, html, ctx.sessionAttribute<Usuario>("USER")!!.pessoaId)
 
             ctx.redirect("/admin?novaPagina=success&linkPagina=${URLEncoder.encode(linkPagina, UTF_8)}")
@@ -91,7 +99,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         val title = ctx.formParam("title")
         val html = ctx.formParam("html")
 
-        if (title != null && html != null) {
+        if (!title.isNullOrBlank() && !html.isNullOrBlank()) {
             val id = dao.insertNoticia(title, html, ctx.sessionAttribute<Usuario>("USER")!!.pessoaId).id
 
             ctx.redirect("/admin?novaNoticia=success&id=$id")
@@ -115,7 +123,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         val novoLinkPagina = ctx.formParam("linkPagina")
         val html = ctx.formParam("html")
 
-        if (title != null && novoLinkPagina != null && html != null) {
+        if (!title.isNullOrBlank() && !novoLinkPagina.isNullOrBlank() && !html.isNullOrBlank()) {
             val p: Pagina
             if (novoLinkPagina != novoLinkPagina) {
                 dao.removePagina(novoLinkPagina)
@@ -151,7 +159,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         val title = ctx.formParam("title")
         val html = ctx.formParam("html")
 
-        if (title != null && html != null) {
+        if (!title.isNullOrBlank() && !html.isNullOrBlank()) {
             noticia.titulo = title
             noticia.html = html
             noticia.dataModificacao = OffsetDateTime.now(brazilZone)
@@ -184,7 +192,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
     fun novoLink(ctx: Context) {
         val nome = ctx.formParam("nome")
         val href = ctx.formParam("href")
-        if (nome != null && href != null) {
+        if (!nome.isNullOrBlank() && !href.isNullOrBlank()) {
             dao.insertLink(nome, href)
             ctx.redirect("/admin?novoLink=success")
             return
@@ -221,4 +229,52 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         }
         ctx.redirect("/admin?deleteLink=invalid")
     }
+
+    fun perfil(ctx: Context) {
+        val self = ctx.sessionAttribute<Usuario>("USER")!!
+        val pessoa = dao.getPessoa(self.pessoaId) ?: throw UnableToEditException(true, ContentType.USUARIO)
+
+        EditarUsuarioView(EditarUsuarioViewModel(pessoa, self, true)).render(ctx)
+    }
+
+    fun salvarPerfil(ctx: Context) {
+        val self = ctx.sessionAttribute<Usuario>("USER")!!
+        val pessoa = dao.getPessoa(self.pessoaId) ?: throw UnableToEditException(true, ContentType.USUARIO)
+
+        val nome = ctx.formParam("nome")
+        val username = ctx.formParam("username")
+        val password = ctx.formParam("password")
+
+        if (!nome.isNullOrBlank() && !username.isNullOrBlank()) {
+            if (pessoa.nome != nome) {
+                pessoa.nome = nome
+                dao.updatePessoa(pessoa)
+            }
+
+            if (self.username != username) {
+                if (dao.getUsuario(username) != null) {
+                    ctx.redirect("/admin?editarUsuario=invalid")
+                    return
+                }
+                val novoUsuario = dao.insertUsuario(username, password ?: "", self.pessoaId, self.admin)
+                if (password.isNullOrBlank()) {
+                    novoUsuario.hash = self.hash
+                    dao.updateUsuario(novoUsuario)
+                }
+                dao.removeUsuario(self.username)
+                ctx.sessionAttribute("USER", novoUsuario)
+            } else if (!password.isNullOrBlank()) {
+                val oldHash = self.hash
+                self.hashPassword(password)
+                if (self.hash != oldHash) {
+                    dao.updateUsuario(self)
+                }
+            }
+            ctx.redirect("/admin?perfil=success")
+            return
+        }
+        ctx.redirect("/admin?perfil=invalid")
+        return
+    }
+
 }

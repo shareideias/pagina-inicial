@@ -6,6 +6,7 @@ import java.util.*
 
 interface DataAccessObject {
     fun getUsuario(username: String): Usuario?
+    fun getUsuarioByPessoa(pessoaId: Int): Usuario?
     fun getPessoa(id: Int): Pessoa?
     fun getNoticia(codigo: Int): Noticia?
     fun getPagina(link: String): Pagina?
@@ -16,7 +17,6 @@ interface DataAccessObject {
     fun allNoticias(): List<Noticia>
     fun allPaginas(): List<Pagina>
     fun allLinks(): List<Link>
-
 
     fun insertUsuario(username: String, password: String, pessoaId: Int, admin: Boolean): Usuario
     fun insertPessoa(nome: String): Pessoa

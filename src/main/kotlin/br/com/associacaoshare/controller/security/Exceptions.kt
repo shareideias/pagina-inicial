@@ -16,5 +16,6 @@ class UnableToEditException(val isAdmin: Boolean, val type: ContentType) : Excep
 class ForbiddenAccessException : Exception()
 
 enum class ContentType(val what: String) {
-    PAGINA("uma página"), NOTICIA("uma notícia"), OUTRO("algo")
+    PAGINA("uma página"), NOTICIA("uma notícia"),
+    USUARIO("um usuário"), PESSOA("uma pessoa"), OUTRO("algo")
 }

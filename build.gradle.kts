@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "br.com.associacaoshare"
-version = "1.0.2"
+version = "1.1"
 
 repositories {
     jcenter()

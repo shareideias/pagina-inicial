@@ -23,7 +23,7 @@ class APIController(override val kodein: Kodein) : EndpointGroup, KodeinAware {
 
     override fun addEndpoints() {
         get { ctx ->
-            ctx.json(mapOf("enpoints" to endpoints))
+            ctx.json(mapOf("endpoints" to endpoints))
         }
         getEndpoint("noticias") { ctx ->
             ctx.json(
