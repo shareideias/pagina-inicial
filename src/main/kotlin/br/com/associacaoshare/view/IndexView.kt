@@ -15,6 +15,55 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
     override val pageTitle = "Página Inicial"
 
     override fun MAIN.renderMain(ctx: Context) {
+
+
+        /*Parte do código temporária para a divulgação dos processos seletivos*/
+        /*Só deverá ser ativada ao começo de cada semestre*/
+        /*div(classes = "janela") {
+            id = "home"
+            div(classes = "conteudo-janela") {
+                a(classes = "fechar") {
+                    href = "#home"
+                    +"""X"""
+                }
+                h2(classes = "titulo-janela") { +"""Processo seletivo""" }
+                p { +"""Está interessado em fazer parte da história de nossa entidade?""" }
+                p { +"""Se inscreva em um ou mais de nossos processos:""" }
+
+                p(classes = "datas-janela") { +"""de 28/02 até 14/03:""" }
+                div(classes = "botaoadm") {
+                    a {
+                        href = "http://bit.ly/InscriçõesAdm"
+                        button(classes = "col s12 btn btn-large waves-effect") { +"""Administrativo""" }
+                    }
+                    br {
+                    }
+                }
+
+                p(classes = "datas-janela") { +"""de 28/02 até 14/03:""" }
+                div(classes = "botaoprof") {
+                    a {
+                        href = "http://bit.ly/InscriçõesProf"
+                        button(classes = "col s12 btn btn-large waves-effect") { +"""Professor""" }
+                    }
+                    br {
+                    }
+                }
+
+                p(classes = "datas-janela") { +"""de 26/03 até 30/03:""" }
+                div(classes = "botaoaluno") {
+                    a {
+                        href = ""
+                        button(classes = "col s12 btn btn-large waves-effect") { +"""Aluno""" }
+                    }
+                    br {
+                    }
+                }
+            }
+        }*/
+        /*fim da parte temporária*/
+
+
         div("container") {
             model.cards.takeIf { it.isNotEmpty() }?.let { renderCards(it) }
             div("row") {
