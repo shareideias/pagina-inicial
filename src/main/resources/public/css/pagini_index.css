@@ -88,6 +88,28 @@ header {
     margin-bottom: 0;
 }
 
+.compartilhamento-titulo{
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.social-sharing{
+    margin-top: 0;
+}
+
+.social-sharing a {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    font-size: 0;
+    margin-left: .25px;
+    margin-right: .25px;
+}
+
+.social-sharing li {
+    display: inline;
+}
+
 @media screen and (max-width: 600px) {
     .conteudo-janela {
         width: 95%;

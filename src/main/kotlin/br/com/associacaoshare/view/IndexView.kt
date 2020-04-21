@@ -19,28 +19,28 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
 
         /*Parte do código temporária para a divulgação dos processos seletivos*/
         /*Só deverá ser ativada ao começo de cada semestre*/
-        /*div(classes = "janela") {
+        div(classes = "janela") {
             id = "home"
             div(classes = "conteudo-janela") {
                 a(classes = "fechar") {
                     href = "#home"
                     +"""X"""
                 }
-                h2(classes = "titulo-janela") { +"""Processo seletivo""" }
-                p { +"""Está interessado em fazer parte da história de nossa entidade?""" }
-                p { +"""Se inscreva em um ou mais de nossos processos:""" }
+                h2(classes = "titulo-janela") { +"""Processo seletivo de alunos""" }
+                p { +"""Está interessado em nossos cursos?""" }
+                p { +"""As inscrições vão do dia 25/04 até 28/04.""" }
 
-                p(classes = "datas-janela") { +"""de 28/02 até 14/03:""" }
+                /*p(classes = "datas-janela") { +"""de 28/02 até 14/03:""" }*/
                 div(classes = "botaoadm") {
                     a {
-                        href = "http://bit.ly/InscriçõesAdm"
-                        button(classes = "col s12 btn btn-large waves-effect") { +"""Administrativo""" }
+                        href = "https://bit.ly/edital-aluno"
+                        button(classes = "col s12 btn btn-large waves-effect") { +"""Edital""" }
                     }
                     br {
                     }
                 }
 
-                p(classes = "datas-janela") { +"""de 28/02 até 14/03:""" }
+                /*p(classes = "datas-janela") { +"""de 28/02 até 14/03:""" }
                 div(classes = "botaoprof") {
                     a {
                         href = "http://bit.ly/InscriçõesProf"
@@ -48,19 +48,19 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
                     }
                     br {
                     }
-                }
+                }*/
 
-                p(classes = "datas-janela") { +"""de 26/03 até 30/03:""" }
+                p(classes = "datas-janela") /*{ +"""de 25/04 até 28/04:""" }*/
                 div(classes = "botaoaluno") {
                     a {
-                        href = ""
-                        button(classes = "col s12 btn btn-large waves-effect") { +"""Aluno""" }
+                        href = "https://forms.gle/pK4RXSeFdfpzqcty8"
+                        button(classes = "col s12 btn btn-large waves-effect") { +"""Inscreva-se""" }
                     }
                     br {
                     }
                 }
             }
-        }*/
+        }
         /*fim da parte temporária*/
 
 
@@ -145,6 +145,12 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
                     }
                 }
                 div("justify") { unsafe { +it.html } }
+                p("compartilhamento-titulo"){+"Compartilhe:"}
+                ul("social-sharing") {
+                    li { a("https://www.facebook.com/sharer/sharer.php?u=https://associacaoshare.com.br/n/${it.id}", classes = "img-fb") { +"Facebook" } }
+                    li { a("https://api.whatsapp.com/send?text=https://associacaoshare.com.br/n/${it.id}", classes = "img-wpp") { +"Whatsapp" } }
+                    li { a("https://www.linkedin.com/shareArticle?mini=true&url=https://associacaoshare.com.br/n/${it.id}", classes = "img-ln") { +"LinkedIn" } }
+                }
             }
         }
     }
