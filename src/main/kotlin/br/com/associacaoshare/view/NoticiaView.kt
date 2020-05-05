@@ -33,7 +33,7 @@ class NoticiaView(override val model: NoticiaViewModel) : PagIniView(PUBLIC_PAGE
                         +" UFSCar - Campus Sorocaba, com o intuito de conectar o desejo de ensinar com a vontade de aprender."
                         +" Para isso oferecemos semestralmente cursos de idioma, culturais e administrativos, além de eventos,"
                         +" tudo isso de forma acessível e com certificado."
-                        +" Contamos com professores voluntários e 7 áreas administrativas voluntárias"
+                        +" Contamos com professores voluntários e 5 áreas administrativas voluntárias"
                         +" dos quais ajudam a fazer o projeto acontecer e crescer."
                     }
                 }

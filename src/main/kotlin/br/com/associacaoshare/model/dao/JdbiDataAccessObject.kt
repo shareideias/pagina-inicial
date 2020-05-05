@@ -77,7 +77,7 @@ class JdbiDataAccessObject(url: String) : DataAccessObject {
                     Ciências Econômicas na UFSCar - Campus Sorocaba, com o intuito de conectar o desejo de ensinar com
                     a vontade de aprender. Para isso oferecemos semestralmente cursos de idioma, culturais e
                     administrativos, além de eventos, tudo isso de forma acessível e com certificado. Contamos com
-                    professores voluntários e 7 áreas administrativas voluntárias dos quais ajudam a fazer o
+                    professores voluntários e 5 áreas administrativas voluntárias dos quais ajudam a fazer o
                     projeto acontecer e crescer.</p><p class="par_news" align="justify">
                     <i>Essa notícia foi automaticamente criada pelo sistema.<br></i></p>""".trimIndent(), adminId)
             }
