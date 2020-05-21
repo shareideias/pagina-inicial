@@ -45,6 +45,16 @@ h2.textoheader{
     margin-top: -0.4em;
 
 }
+/*solucao para texto nao estragar nav-bar no mobile*/
+@media screen and (max-width: 992px) {
+    h1.textoheadertitulo {
+        text-shadow: 0 0;
+    }
+    h2.textoheader{
+        text-shadow: 0 0;
+    }
+}
+
 @media screen and (max-width: 749px) {
     h1.textoheadertitulo {
         text-align: center;
