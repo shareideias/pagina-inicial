@@ -15,8 +15,6 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
     override val pageTitle = "Página Inicial"
 
     override fun MAIN.renderMain(ctx: Context) {
-
-
         /*Parte do código temporária para a divulgação dos processos seletivos*/
         /*Só deverá ser ativada ao começo de cada semestre*/
         /*div(classes = "janela") {
@@ -63,7 +61,205 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
         }*/
         /*fim da parte temporária*/
 
+        /*header com foto*/
+        div(classes = "parallax-container") {
+            h1(classes = "textoheadertitulo") { +"""Share""" }
+            h2(classes = "textoheader") {
+                +"""Compartilhando"""
+                br {
+                }
+                +"""ideias"""
+            }
+            div(classes = "parallax") {
+                img {
+                    src = "/img/alunoheader.png"
+                }
+            }
+        }
+        /*fim header*/
 
+        /*Noticias*/
+        div(classes = "slider") {
+            ul(classes = "slides") {
+                li {
+                    img {
+                        src = "../img/noticia1.png"
+                    }
+                    div(classes = "caption left-align") {
+                        h3 { +"""Notícia 1""" }
+                        h5(classes = "light grey-text text-lighten-3") { +"""Here's our small slogan.""" }
+                        a(classes = "btn waves-effect white grey-text darken-text-2") { +"""Checar notícias""" }
+                    }
+                }
+                li {
+                    img {
+                        src = "../img/noticia_2.png"
+                    }
+                    div(classes = "black-text caption left-align") {
+                        h3 { +"""Notícia 2""" }
+                        h5(classes = "light grey-text black-text") { +"""Here's our small slogan.""" }
+                        a(classes = "btn waves-effect white grey-text darken-text-2") { +"""Checar notícias""" }
+                    }
+                }
+                li {
+                    img {
+                        src = "../img/noticia_3.png"
+                    }
+                    div(classes = "caption center-align") {
+                        h3 { +"""Notícia 3""" }
+                        h5(classes = "light grey-text text-lighten-3") { +"""Here's our small slogan.""" }
+                        a(classes = "btn waves-effect white grey-text darken-text-2") { +"""Checar notícias""" }
+                    }
+                }
+            }
+        }
+        /*fim Noticias*/
+
+        /*redes sociais*/
+        div(classes = "redes") {
+            ul(classes = "redes_sociais") {
+                li {
+                    a(classes = "img-fb") {
+                        href = "https://www.facebook.com/shareideias/"
+                        +"""Facebook"""
+                    }
+                }
+                li { a("https://www.instagram.com/shareideias/", classes = "img-ig") { +"Instagram" } }
+                li {
+                    a(classes = "img-ln") {
+                        href = "https://www.linkedin.com/in/shareideias/"
+                        +"""LinkedIn"""
+                    }
+                }
+            }
+        }
+        /*fim redes sociais*/
+
+        /*MISSAO*/
+        div(classes = "row rowzeras1") {
+            h2(classes = "wow animate__animated animate__fadeIn") {
+                id = "instit1"
+                +"""Nossa Missão"""
+            }
+
+            div(classes = "col s12 m10 offset-m1 l10 offset-l1") {
+                div(classes = "card cardzeras1 wow animate__animated animate__fadeIn") {
+                    attributes["data-wow-delay"] = "0.5s"
+                    +"""Visamos a """
+                    b(classes = "negritocartao1") { +"""construção do conhecimento """ }
+                    +"""nas mais diversas áreas: idiomas, cultura e até softwares. Tudo isso de forma """
+                    b(classes = "negritocartao1") { +"""íntegra e gratuita""" }
+                    +""", preservando, assim, tanto o ensinar quanto o aprender."""
+                }
+            }
+        }
+        /*FIM MISSAO*/
+
+        img(classes = "responsive-img") {
+            src = "/img/aula_fade1.png"
+        }
+
+        /*CONQUISTAS*/
+        div(classes = "row rowzeras2") {
+            div(classes = "col s12 m8 offset-m2 l8 offset-l2") {
+                div(classes = "card cardzeras2") {
+                    +"""No primeiro semestre de 2020 """
+                    b(classes = "negritocartao2") { +"""mais de 3.900 pessoas """ }
+                    +"""tanto no Brasil quanto no exterior se inscreveram em cursos da Share"""
+                }
+            }
+
+            div(classes = "col s12 m10 offset-m1 l10 offset-l1") {
+                div(classes = "card cardzeras21") {
+                    +"""Oferecemos """
+                    b(classes = "negritocartao2") { +"""18 cursos""" }
+                    +""" e ofertamos """
+                    b(classes = "negritocartao2") { +"""370 vagas""" }
+                }
+            }
+
+            div(classes = "col s12 m10 offset-m1 l10 offset-l1") {
+                div(classes = "card cardzeras22") {
+                    +"""Fomos destaque no """
+                    a(classes = "linknot") {
+                        href = "“https://g1.globo.com/sp/sorocaba-jundiai/noticia/2020/04/23/centro-de-linguas-da-ufscar-sorocaba-recebe-inscricoes-para-cursos-gratuitos.ghtml”"
+                        target = "“_blank”"
+                        +"""G1 Notícias"""
+                    }
+                    +""","""
+                    a(classes = "linknot") {
+                        href = "“https://www.sorocaba.ufscar.br/noticia?codigo=12631”"
+                        target = "“_blank”"
+                        +""" Site da UFSCar Sorocaba,"""
+                    }
+                    br{
+
+                    }
+                    +"""Rádio Jornal Cruzeiro do Sul e TV Sorocaba(SBT)"""
+                }
+            }
+        }
+        /*FIM CONQUISTAS*/
+
+        h3(classes = "wow animate__animated animate__slideInUp citacao") { +""""Conectar o desejo de ensinar com a vontade de aprender"""" }
+
+        /*DEPOIMENTOS*/
+        div(classes = "row rowzeras3") {
+            div(classes = "col s12 m10 offset-m1 l10 offset-l1") {
+                div(classes = "card cardzeras3") {
+                    i { +""""Fazer o curso de oratória na share, para mim, foi incrível! Além de ter a oportunidade de conhecer pessoas de outros cursos e pessoas de fora da UFSCar, as aulas me proporcionaram um aprendizado muito rico sobre técnicas de apresentação, como se portar durante um discurso e como ser claro e coerente ao passar uma mensagem verbal. Indico a Share para todos aqueles que tem vontade de aprender de uma forma inovadora!"""" }
+                    br{
+
+                    }
+                    b { +"""- Vitória Benevenuto, foi aluna do curso de Oratória""" }
+                }
+            }
+
+
+            div(classes = "col s12 m10 offset-m1 l10 offset-l1") {
+                div(classes = "card cardzeras3") {
+                    i { +""""Eu fiz o curso de espanhol pós intermediário e foi muito bom, gostei muito da relação aluno-professor que eu tive com a minha professora (tanto que agora ela é minha aluna de alemão). Já sabia muito do idioma, mas eu não tinha nenhuma prova ou certificado e isso me ajudou muito; quase fui contratada como professora de espanhol esse ano, mas por não atender meu horario de disponibilidade mesmo que eu não consegui"""" }
+                    br{
+
+                    }
+                    b { +"""- Helena do Carmo, foi aluna do curso de Espanhol Pós-intermediário""" }
+                }
+            }
+
+
+            div(classes = "col s12 m10 offset-m1 l10 offset-l1") {
+                div(classes = "card cardzeras3") {
+                    i { +""""Estudei inglês com a Share durante o ano de 2018 e foi uma experiência bastante proveitosa, pude rever conceitos do qual tinha dúvidas, aumentar meu vocabulário e aprofundar meu conhecimento. Foi a minha primeira oportunidade dentro de uma sala de aula para o aprendizado de inglês e hoje posso afirmar que consigo compreender a língua de uma forma bem melhor. É um ótimo projeto que recomendo para toda a comunidade de dentro e de fora da UFSCar."""" }
+                    br{
+
+                    }
+                    b { +"""- Joice Natália Araújo, foi aluna do curso de Inglês""" }
+                }
+            }
+            div(classes = "col s12 m10 offset-m1 l10 offset-l1") {
+                div(classes = "card cardzeras3") {
+                    i { +""""Fiz Inglês básico em 2019 e a experiência foi além das minhas expectativas. A professora explicava muito bem e trouxe um material muito legal; dava atividades para praticarmos em casa e sempre nos incentivava e dava dicas. Também foi muito legal ver pessoas fora da comunidade da UFSCar fazendo o curso com vontade de aprender e se esforçando bastante, a entidade realmente proporciona muitas oportunidades para todos."""" }
+                    br{
+
+                    }
+                    b { +"""- Francielli Viana, foi aluna do curso de Inglês""" }
+                }
+            }
+        }
+        /*FIM DEPOIMENTOS*/
+
+        div(classes = "parallax-container") {
+            div(classes = "parallax") {
+                img {
+                    src = "/img/time_parallax.png"
+                }
+            }
+        }
+
+
+
+
+/*
         div("container") {
             model.cards.takeIf { it.isNotEmpty() }?.let { renderCards(it) }
             div("row") {
@@ -152,6 +348,10 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
                     li { a("https://www.linkedin.com/shareArticle?mini=true&url=https://associacaoshare.com.br/n/${it.id}", classes = "img-ln") { +"LinkedIn" } }
                 }
             }
-        }
+        }*/
+        
+        script("text/javascript", "/js/m_parallax.js") {}
+        script("text/javascript", "/js/m_slider.js") {}
+
     }
 }

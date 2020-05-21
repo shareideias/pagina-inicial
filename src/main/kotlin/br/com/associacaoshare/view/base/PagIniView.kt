@@ -26,6 +26,32 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
             link("https://fonts.googleapis.com/icon?family=Material+Icons", "stylesheet")
             link("/css/materialize.min.css", "stylesheet")
             link("/css/pagini.css", "stylesheet")
+
+            /*jquery*/
+            script {
+                src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+            }
+            /*animacao*/
+            link {
+                rel = "stylesheet"
+                href = "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+            }
+            script {
+                src = "/js/wow.min.js"
+            }
+            script {
+                src = "/js/wowanimate.js"
+            }
+            /*fim animacao*/
+            /*fonte*/
+            link {
+                href = "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
+                rel = "stylesheet"
+            }
+
+
+
+
             for (module in type.cssModules) {
                 link("/css/pagini_$module.css", "stylesheet")
             }
@@ -86,6 +112,7 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
         body {
             header { renderHeader() }
             main { renderMain(ctx) }
+
             if ("public" in type.cssModules) {
                 footer("public-footer") { renderFooter() }
             }
@@ -127,18 +154,34 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
                 }
             }
         }
-        if (type == Type.INDEX) {
+        /*if (type == Type.INDEX) {
             img("'Share' em Manuscrito", "/img/handwritten.png", "handwritten-logo")
-        }
+        }*/
     }
 
     private fun FOOTER.renderFooter() {
+        /*Editado pela Braca*/
         ul("social-networks") {
             li { a("https://www.facebook.com/shareideias/", classes = "img-fb") { +"Facebook" } }
             li { a("https://www.instagram.com/shareideias/", classes = "img-ig") { +"Instagram" } }
             li { a("https://www.linkedin.com/company/associacaoshare/", classes = "img-ln") { +"LinkedIn" } }
         }
-        p("center-align bold") { +"© Share. Todos os direitos reservados." }
+        a(classes = "white-text") {
+            href = "https://br.freepik.com/fotos-vetores-gratis/escola"
+            +"""Foto do header criado por jcomp - br.freepik.com"""
+        }
+        br{
+
+        }
+        a(classes = "white-text") {
+            href = "https://br.freepik.com/fotos-vetores-gratis"
+            +"""Fotos das notícias criadas por freepik"""
+        }
+        br{
+
+        }
+        p("center-align bold white-text") { +"© Share. Todos os direitos reservados." }
+        /*Editado pela Braca*/
     }
 
     private fun BODY.renderScripts() {

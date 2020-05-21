@@ -18,7 +18,7 @@ class ShareAccessManager : AccessManager {
                 in permittedRoles -> handler.handle(ctx)
                 ANYONE -> {
                     val thenUrl = listOfNotNull(ctx.path(), ctx.queryString()).joinToString("?")
-                    ctx.redirect("/login?err=unauthorized&then=${urlEncode(thenUrl, UTF_8)}")
+                    ctx.redirect("/login?err=unauthorized&then=${urlEncode(thenUrl, UTF_8.toString())}")
                 }
                 else -> throw ForbiddenAccessException()
             }

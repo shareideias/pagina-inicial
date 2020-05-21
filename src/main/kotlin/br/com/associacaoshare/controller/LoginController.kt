@@ -33,7 +33,7 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
     }
 
     private fun login(ctx: Context) {
-        val then = ctx.queryParam("then")?.let { URLDecoder.decode(it, Charsets.UTF_8) }
+        val then = ctx.queryParam("then")?.let { URLDecoder.decode(it, Charsets.UTF_8.toString()) }
 
         when (ShareAccessManager.getRole(ctx.sessionAttribute<Usuario>("USER"))) {
             MainRole.ANYONE -> {
@@ -68,7 +68,7 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
             ctx.redirect("/login/?err=invalidcreds")
             return
         }
-        val invalidCredsWithUsername = "/login/?err=invalidcreds&username=${URLEncoder.encode(user, Charsets.UTF_8)}"
+        val invalidCredsWithUsername = "/login/?err=invalidcreds&username=${URLEncoder.encode(user, Charsets.UTF_8.toString())}"
         if (pass == null) {
             ctx.redirect(invalidCredsWithUsername)
             return
@@ -92,7 +92,7 @@ class LoginController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
 
     private fun loginRoutine(ctx: Context, u: Usuario, rememberMe: Boolean) {
         ctx.sessionAttribute("USER", u)
-        val then = (ctx.formParam("then") ?: ctx.queryParam("then"))?.let { URLDecoder.decode(it, Charsets.UTF_8) }
+        val then = (ctx.formParam("then") ?: ctx.queryParam("then"))?.let { URLDecoder.decode(it, Charsets.UTF_8.toString()) }
 
         if (rememberMe) {
             val expires = Date.from(Instant.now().plus(60, ChronoUnit.DAYS))

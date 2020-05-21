@@ -86,7 +86,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
         if (!title.isNullOrBlank() && !linkPagina.isNullOrBlank() && !html.isNullOrBlank()) {
             dao.insertPagina(linkPagina, title, html, ctx.sessionAttribute<Usuario>("USER")!!.pessoaId)
 
-            ctx.redirect("/admin?novaPagina=success&linkPagina=${URLEncoder.encode(linkPagina, UTF_8)}")
+            ctx.redirect("/admin?novaPagina=success&linkPagina=${URLEncoder.encode(linkPagina, UTF_8.toString())}")
         }
         ctx.redirect("/admin?novaPagina=invalid")
     }
@@ -137,7 +137,7 @@ class AdminController(override val kodein: Kodein) : EndpointGroup, KodeinAware 
             p.ultimaModificacaoPorPessoa = ctx.sessionAttribute<Usuario>("USER")!!.pessoaId
             dao.updatePagina(p)
 
-            ctx.redirect("/admin?editarPagina=success&linkPagina=${URLEncoder.encode(novoLinkPagina, UTF_8)}")
+            ctx.redirect("/admin?editarPagina=success&linkPagina=${URLEncoder.encode(novoLinkPagina, UTF_8.toString())}")
             return
         }
         ctx.redirect("/admin?editarPagina=invalid")
