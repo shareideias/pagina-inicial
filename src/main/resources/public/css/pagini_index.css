@@ -1,14 +1,14 @@
 /*Conteúdo do nav-bar*/
 header{
     /*background-image: linear-gradient(to right, #81F781, #81BEF7, #F781F3);*/ /*verde azul rosa*/
-    background-image: linear-gradient(to right, #81BEF7, #F78181, #a4e887); /*azul vermelho rosa*/
+    background-image: linear-gradient(to right, #81BEF7, #F78181, #a4e887); /*azul vermelho verde*/
     background-size: cover;
     background-position: center;
     position: sticky;
 }
 
 .link_menu{
-    color: #424242;
+    color: white;
 }
 
 .brand-logo{

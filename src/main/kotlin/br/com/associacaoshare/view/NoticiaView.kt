@@ -25,6 +25,12 @@ class NoticiaView(override val model: NoticiaViewModel) : PagIniView(PUBLIC_PAGE
                             unsafe { +model.noticia.html }
                         }
                     }
+                    p("compartilhamento-titulo") { +"Compartilhe:" }
+                    ul("social-sharing") {
+                        li { a("https://www.facebook.com/sharer/sharer.php?u=https://associacaoshare.com.br/n/${model.noticia.id}", classes = "img-fb") { +"Facebook" } }
+                        li { a("https://api.whatsapp.com/send?text=https://associacaoshare.com.br/n/${model.noticia.id}", classes = "img-wpp") { +"Whatsapp" } }
+                        li { a("https://www.linkedin.com/shareArticle?mini=true&url=https://associacaoshare.com.br/n/${model.noticia.id}", classes = "img-ln") { +"LinkedIn" } }
+                    }
                 }
                 div("col s12 xl4") {
                     h5("underlined") { +"Sobre nós:" }

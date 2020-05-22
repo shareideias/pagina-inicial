@@ -1,0 +1,22 @@
+.section-header {
+    background-image: linear-gradient(to right, #81BEF7, #F78181, #a4e887);
+    height: 200px;
+}
+
+.section-title{
+    font-family: 'ShareTitulo';
+    color: white;
+    text-align: center;
+    margin-top: 0;
+    padding-top: 40px;
+    font-size: 100px;
+}
+
+.card-content{
+    padding-top: 1px !important;
+    padding-bottom: 0 !important;
+}
+
+.post-title{
+    font-size: 2.3rem;
+}

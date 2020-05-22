@@ -1,6 +1,10 @@
 /* Navbar */
-header {
-    background-image: linear-gradient(to right, #81BEF7, #F78181, #F781F3);
+header{
+    /*background-image: linear-gradient(to right, #81F781, #81BEF7, #F781F3);*/ /*verde azul rosa*/
+    background-image: linear-gradient(to right, #81BEF7, #F78181, #a4e887); /*azul vermelho verde*/
+    background-size: cover;
+    background-position: center;
+    position: sticky;
 }
 
 .share-brand {
@@ -55,4 +59,27 @@ code {
 /* The most useful helper class in the world */
 .mb-0 {
     margin-bottom: 0;
+}
+
+.compartilhamento-titulo{
+    font-weight: bold;
+    margin-bottom: 0 !important;
+    margin-top: 10px !important;
+}
+
+.social-sharing{
+    margin-top: 0;
+}
+
+.social-sharing a {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    font-size: 0;
+    margin-left: .25px;
+    margin-right: .25px;
+}
+
+.social-sharing li {
+    display: inline;
 }

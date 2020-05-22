@@ -6,6 +6,7 @@ import br.com.associacaoshare.model.dao.DataAccessObject
 import br.com.associacaoshare.model.page.IndexViewModel
 import br.com.associacaoshare.model.page.NoticiaViewModel
 import br.com.associacaoshare.model.page.PaginaViewModel
+import br.com.associacaoshare.view.BlogView
 import br.com.associacaoshare.view.IndexView
 import br.com.associacaoshare.view.NoticiaView
 import br.com.associacaoshare.view.PaginaView
@@ -21,6 +22,7 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
 
     override fun addEndpoints() {
         get(::index)
+        get("blog", ::blog)
         get("n/:noticia", ::noticia)
         get("p/:p1", ::pagina)
         get("p/:p1/:p2", ::pagina)
@@ -35,9 +37,20 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
         val cards = dao.paginateNoticias(0).take(3)
         val noticias = dao.paginateNoticias(p)
         val pessoas = noticias.flatMap { listOfNotNull(it.criadoPorPessoa, it.ultimaModificacaoPorPessoa) }.toSet()
-            .mapNotNull { dao.getPessoa(it)?.let { p -> it to p } }.toMap()
+                .mapNotNull { dao.getPessoa(it)?.let { p -> it to p } }.toMap()
 
         IndexView(IndexViewModel(dao.allLinks(), p, cards, noticias, pessoas)).render(ctx)
+    }
+
+    fun blog(ctx: Context) {
+        val p = ctx.queryParam("p")?.toIntOrNull()?.coerceAtLeast(0) ?: 0
+
+        val cards = dao.paginateNoticias(0).take(3)
+        val noticias = dao.paginateNoticias(p)
+        val pessoas = noticias.flatMap { listOfNotNull(it.criadoPorPessoa, it.ultimaModificacaoPorPessoa) }.toSet()
+                .mapNotNull { dao.getPessoa(it)?.let { p -> it to p } }.toMap()
+
+        BlogView(IndexViewModel(dao.allLinks(), p, cards, noticias, pessoas)).render(ctx)
     }
 
     fun noticia(ctx: Context) {
@@ -46,12 +59,12 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
         val noticia = dao.getNoticia(id) ?: throw NotFoundException(false, ContentType.NOTICIA)
 
         NoticiaView(
-            NoticiaViewModel(
-                dao.allLinks(),
-                noticia,
-                dao.getPessoa(noticia.criadoPorPessoa),
-                noticia.ultimaModificacaoPorPessoa?.let(dao::getPessoa)
-            )
+                NoticiaViewModel(
+                        dao.allLinks(),
+                        noticia,
+                        dao.getPessoa(noticia.criadoPorPessoa),
+                        noticia.ultimaModificacaoPorPessoa?.let(dao::getPessoa)
+                )
         ).render(ctx)
     }
 
