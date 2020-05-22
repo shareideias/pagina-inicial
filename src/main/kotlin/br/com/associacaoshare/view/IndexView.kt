@@ -182,13 +182,13 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
                 div(classes = "card cardzeras22") {
                     +"""Fomos destaque no """
                     a(classes = "linknot") {
-                        href = "“https://g1.globo.com/sp/sorocaba-jundiai/noticia/2020/04/23/centro-de-linguas-da-ufscar-sorocaba-recebe-inscricoes-para-cursos-gratuitos.ghtml”"
+                        href = "https://g1.globo.com/sp/sorocaba-jundiai/noticia/2020/04/23/centro-de-linguas-da-ufscar-sorocaba-recebe-inscricoes-para-cursos-gratuitos.ghtml"
                         target = "“_blank”"
                         +"""G1 Notícias"""
                     }
                     +""","""
                     a(classes = "linknot") {
-                        href = "“https://www.sorocaba.ufscar.br/noticia?codigo=12631”"
+                        href = "https://www.sorocaba.ufscar.br/noticia?codigo=12631"
                         target = "“_blank”"
                         +""" Site da UFSCar Sorocaba,"""
                     }
@@ -255,6 +255,7 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
                 }
             }
         }
+
 
 
 

@@ -146,12 +146,12 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
                 }
 
                 ul("right hide-on-med-and-down") {
-                    model.navLinks.forEach { li { a(it.href) { +it.nome } } }
+                    model.navLinks.forEach { li { a(it.href, classes = "link_menu") { +it.nome } } }
                     li { a("/blog") { +"Blog" } }
                 }
                 ul("sidenav lighten-2") {
                     id = "mobile-menu"
-                    model.navLinks.forEach { li { a(it.href) { +it.nome } } }
+                    model.navLinks.forEach { li { a(it.href, classes = "link_menu") { +it.nome } } }
                     li { a("/blog") { +"Blog" } }
                 }
             }
