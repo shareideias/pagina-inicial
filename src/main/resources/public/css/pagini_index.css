@@ -4,7 +4,6 @@ header{
     background-image: linear-gradient(to right, #81BEF7, #F78181, #a4e887); /*azul vermelho verde*/
     background-size: cover;
     background-position: center;
-    position: sticky;
 }
 
 .link_menu{
@@ -45,15 +44,7 @@ h2.textoheader{
     margin-top: -0.4em;
 
 }
-/*solucao para texto nao estragar nav-bar no mobile*/
-@media screen and (max-width: 992px) {
-    h1.textoheadertitulo {
-        text-shadow: 0 0;
-    }
-    h2.textoheader{
-        text-shadow: 0 0;
-    }
-}
+
 
 @media screen and (max-width: 749px) {
     h1.textoheadertitulo {
@@ -278,6 +269,7 @@ footer{
     padding-top: 1em;
     margin-bottom: -5px;
 }
+
 .public-footer{
     margin-bottom: 0;
     margin-top: 0;

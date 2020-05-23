@@ -4,7 +4,6 @@ header{
     background-image: linear-gradient(to right, #81BEF7, #F78181, #a4e887); /*azul vermelho verde*/
     background-size: cover;
     background-position: center;
-    position: sticky;
 }
 
 .share-brand {
