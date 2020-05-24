@@ -5,26 +5,20 @@ import br.com.associacaoshare.model.page.IndexViewModel
 import br.com.associacaoshare.utils.compressSpaces
 import br.com.associacaoshare.utils.limit
 import br.com.associacaoshare.view.base.PagIniView
-import br.com.associacaoshare.view.base.PagIniView.Type.INDEX
 import io.javalin.http.Context
 import kotlinx.html.*
 import org.jsoup.Jsoup
 import java.time.format.DateTimeFormatter
 
-class BlogView(override val model: IndexViewModel) : PagIniView(INDEX) {
+class PostsView(override val model: IndexViewModel) : PagIniView(Type.INDEX) {
     override val pageTitle = "Blog"
 
     override fun MAIN.renderMain(ctx: Context) {
         link("/css/pagini_blog.css", "stylesheet")
-        div("section-header") {
-            h1("section-title") { +"""Blog""" }
-        }
-
         div("container") {
             div("row") {
                 div("col s12 xl8") {
                     h5("underlined") { +"Publicações:" }
-
                     if (model.noticias.isNotEmpty()) {
                         renderNoticias(model.noticias)
                     } else {
@@ -40,12 +34,6 @@ class BlogView(override val model: IndexViewModel) : PagIniView(INDEX) {
                             }
                         }
                     }
-
-                    a {
-                        href = "posts"
-                        button(classes = "col s12 btn btn-large waves-effect") { +"""Ver todas as publicações""" }
-                    }
-
                 }
                 div("col s12 xl4") {
                     h5("underlined") { +"Sobre nós:" }
@@ -61,7 +49,6 @@ class BlogView(override val model: IndexViewModel) : PagIniView(INDEX) {
             }
         }
     }
-
 
 
 
