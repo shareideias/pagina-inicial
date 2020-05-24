@@ -127,9 +127,16 @@ h2.textoheader{
     margin-top: 1.5em;
 }
 
+.slides-posttitle, .slides-postcontent{
+    color: black;
+}
+
 @media screen and (max-width: 768px) {
     .slider{
         width: 100%;
+    }
+    .slides-posttitle{
+        margin-top: 0;
     }
 }
 /*fim slider*/

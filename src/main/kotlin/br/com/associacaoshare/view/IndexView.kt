@@ -78,42 +78,11 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
         }
         /*fim header*/
 
-        /*Noticias*/
+        /*Blog*/
         div(classes = "slider") {
-            ul(classes = "slides") {
-                li {
-                    img {
-                        src = "../img/noticia1.png"
-                    }
-                    div(classes = "caption left-align") {
-                        h3 { +"""Notícia 1""" }
-                        h5(classes = "light grey-text text-lighten-3") { +"""Here's our small slogan.""" }
-                        a(classes = "btn waves-effect white grey-text darken-text-2") { +"""Checar notícias""" }
-                    }
-                }
-                li {
-                    img {
-                        src = "../img/noticia_2.png"
-                    }
-                    div(classes = "black-text caption left-align") {
-                        h3 { +"""Notícia 2""" }
-                        h5(classes = "light grey-text black-text") { +"""Here's our small slogan.""" }
-                        a(classes = "btn waves-effect white grey-text darken-text-2") { +"""Checar notícias""" }
-                    }
-                }
-                li {
-                    img {
-                        src = "../img/noticia_3.png"
-                    }
-                    div(classes = "caption center-align") {
-                        h3 { +"""Notícia 3""" }
-                        h5(classes = "light grey-text text-lighten-3") { +"""Here's our small slogan.""" }
-                        a(classes = "btn waves-effect white grey-text darken-text-2") { +"""Checar notícias""" }
-                    }
-                }
-            }
+            model.cards.takeIf { it.isNotEmpty() }?.let { renderCards(it) }
         }
-        /*fim Noticias*/
+        /*fim Blog*/
 
         /*redes sociais*/
         div(classes = "redes") {
@@ -354,5 +323,83 @@ class IndexView(override val model: IndexViewModel) : PagIniView(INDEX) {
         script("text/javascript", "/js/m_parallax.js") {}
         script("text/javascript", "/js/m_slider.js") {}
 
+    }
+
+    private fun DIV.renderCards(noticias: List<Noticia>) {
+        when (noticias.size) {
+            1 -> {
+                    ul(classes = "slides") {
+                        li {
+                            img {
+                                src = "../img/noticia1.png"
+                            }
+                            div(classes = "caption left-align") {
+                                h3("slides-posttitle") { +noticias[0].titulo }
+                                h5(classes = "light grey-text text-lighten-3 slides-postcontent") { +Jsoup.parseBodyFragment(noticias[0].html, "/").text().compressSpaces().limit(80)}
+                                a("blog", classes = "btn waves-effect white grey-text darken-text-2") { +"""Ver Blog da Share""" }
+                            }
+                        }
+                    }
+                }
+            2 -> {
+                ul(classes = "slides") {
+                    li {
+                        img {
+                            src = "../img/noticia1.png"
+                        }
+                        div(classes = "caption left-align") {
+                            h3("slides-posttitle") { +noticias[0].titulo }
+                            h5(classes = "light grey-text text-lighten-3 slides-postcontent") { +Jsoup.parseBodyFragment(noticias[0].html, "/").text().compressSpaces().limit(80)}
+                            a("blog", classes = "btn waves-effect white grey-text darken-text-2") { +"""Ver Blog da Share""" }
+                        }
+                    }
+
+                    li {
+                        img {
+                            src = "../img/noticia_2.png"
+                        }
+                        div(classes = "caption left-align") {
+                            h3("slides-posttitle") { +noticias[1].titulo }
+                            h5(classes = "text-lighten-3 slides-postcontent") { +Jsoup.parseBodyFragment(noticias[1].html, "/").text().compressSpaces().limit(80)}
+                            a("blog", classes = "btn waves-effect white grey-text darken-text-2") { +"""Ver Blog da Share""" }
+                        }
+                    }
+                }
+            }
+            3 -> {
+                ul(classes = "slides") {
+                    li {
+                        img {
+                            src = "../img/noticia1.png"
+                        }
+                        div(classes = "caption left-align") {
+                            h3("slides-posttitle") { +noticias[0].titulo }
+                            h5(classes = "light grey-text text-lighten-3 slides-postcontent") { +Jsoup.parseBodyFragment(noticias[0].html, "/").text().compressSpaces().limit(80)}
+                            a("blog", classes = "btn waves-effect white grey-text darken-text-2") { +"""Ver Blog da Share""" }
+                        }
+                    }
+                    li {
+                        img {
+                            src = "../img/noticia_2.png"
+                        }
+                        div(classes = "caption left-align") {
+                            h3("slides-posttitle") { +noticias[1].titulo }
+                            h5(classes = "text-lighten-3 slides-postcontent") { +Jsoup.parseBodyFragment(noticias[1].html, "/").text().compressSpaces().limit(80)}
+                            a("blog", classes = "btn waves-effect white grey-text darken-text-2") { +"""Ver Blog da Share""" }
+                        }
+                    }
+                    li {
+                        img {
+                            src = "../img/noticia_3.png"
+                        }
+                        div(classes = "caption left-align") {
+                            h3("slides-posttitle") { +noticias[2].titulo }
+                            h5(classes = "text-lighten-3 slides-postcontent") { +Jsoup.parseBodyFragment(noticias[2].html, "/").text().compressSpaces().limit(80)}
+                            a("blog", classes = "btn waves-effect white grey-text darken-text-2") { +"""Ver Blog da Share""" }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
