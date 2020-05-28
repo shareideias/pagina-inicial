@@ -6,12 +6,7 @@ import br.com.associacaoshare.model.dao.DataAccessObject
 import br.com.associacaoshare.model.page.IndexViewModel
 import br.com.associacaoshare.model.page.NoticiaViewModel
 import br.com.associacaoshare.model.page.PaginaViewModel
-import br.com.associacaoshare.view.BlogView
-import br.com.associacaoshare.view.IndexView
-import br.com.associacaoshare.view.CursoView
-import br.com.associacaoshare.view.FAQView
-import br.com.associacaoshare.view.NoticiaView
-import br.com.associacaoshare.view.PaginaView
+import br.com.associacaoshare.view.*
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.EndpointGroup
 import io.javalin.http.Context
@@ -25,6 +20,7 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
     override fun addEndpoints() {
         get(::index)
         get("blog", ::blog)
+        get("posts", ::posts)
         get("cursos", ::cursos)
         get("faq", ::faq)
         get("n/:noticia", ::noticia)
@@ -55,6 +51,17 @@ class PublicController(override val kodein: Kodein) : EndpointGroup, KodeinAware
                 .mapNotNull { dao.getPessoa(it)?.let { p -> it to p } }.toMap()
 
         BlogView(IndexViewModel(dao.allLinks(), p, cards, noticias, pessoas)).render(ctx)
+    }
+
+    fun posts(ctx: Context) {
+        val p = ctx.queryParam("p")?.toIntOrNull()?.coerceAtLeast(0) ?: 0
+
+        val cards = dao.paginateNoticias(0).take(3)
+        val noticias = dao.paginateNoticias(p)
+        val pessoas = noticias.flatMap { listOfNotNull(it.criadoPorPessoa, it.ultimaModificacaoPorPessoa) }.toSet()
+                .mapNotNull { dao.getPessoa(it)?.let { p -> it to p } }.toMap()
+
+        PostsView(IndexViewModel(dao.allLinks(), p, cards, noticias, pessoas)).render(ctx)
     }
 
     fun cursos(ctx: Context) {

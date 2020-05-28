@@ -16,9 +16,8 @@ class BlogView(override val model: IndexViewModel) : PagIniView(INDEX) {
 
     override fun MAIN.renderMain(ctx: Context) {
         link("/css/pagini_blog.css", "stylesheet")
-        div("section-header") {
-            h1("section-title") { +"""Blog""" }
-        }
+
+        h1("section-title") { +"""Blog""" }
 
         div("container") {
             div("row") {
