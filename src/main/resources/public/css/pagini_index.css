@@ -128,7 +128,7 @@ h2.textoheader{
 }
 
 .slides-posttitle, .slides-postcontent{
-    color: black;
+    color: #181719;
 }
 
 @media screen and (max-width: 768px) {
@@ -283,8 +283,8 @@ footer{
 }
 
 .redes_sociais a{
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     display: inline-block;
     font-size: 0;
     margin-left: .25px;
@@ -296,15 +296,17 @@ footer{
 }
 
 .img-fb{
-    background-image: url(../img/icon/fb.png);
+    background-image: url(../img/icon/fbm.png);
 }
+
 
 .img-ig{
-    background-image: url(../img/icon/ig.png);
+    background-image: url(../img/icon/igm.png);
 }
 
+
 .img-ln{
-    background-image: url(../img/icon/ln.png);
+    background-image: url(../img/icon/lnm.png);
 }
 
 .janela {

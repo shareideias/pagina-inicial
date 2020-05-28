@@ -6,8 +6,8 @@
 }
 
 .social-networks a {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     display: inline-block;
     font-size: 0;
     margin-left: .25px;
@@ -18,16 +18,23 @@
     display: inline;
 }
 
-.img-fb {
-    background-image: url(../img/icon/fb.png);
+
+.img-fb-footer{
+    background-image: url(../img/icon/fbm_white.png);
+    width: 32px;
+    height: 32px;
 }
 
-.img-ig {
-    background-image: url(../img/icon/ig.png);
+.img-ig-footer{
+    background-image: url(../img/icon/igm_white.png);
+    width: 32px;
+    height: 32px;
 }
 
-.img-ln {
-    background-image: url(../img/icon/ln.png);
+.img-ln-footer{
+    background-image: url(../img/icon/lnm_white.png);
+    width: 32px;
+    height: 32px;
 }
 
 .img-wpp {

@@ -162,9 +162,9 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
     private fun FOOTER.renderFooter() {
         /*Editado pela Braca*/
         ul("social-networks") {
-            li { a("https://www.facebook.com/shareideias/", classes = "img-fb") { +"Facebook" } }
-            li { a("https://www.instagram.com/shareideias/", classes = "img-ig") { +"Instagram" } }
-            li { a("https://www.linkedin.com/company/associacaoshare/", classes = "img-ln") { +"LinkedIn" } }
+            li { a("https://www.facebook.com/shareideias/", classes = "img-fb-footer") { +"Facebook" } }
+            li { a("https://www.instagram.com/shareideias/", classes = "img-ig-footer") { +"Instagram" } }
+            li { a("https://www.linkedin.com/company/associacaoshare/", classes = "img-ln-footer") { +"LinkedIn" } }
         }
         a(classes = "white-text") {
             href = "https://br.freepik.com/fotos-vetores-gratis/escola"
@@ -179,6 +179,20 @@ abstract class PagIniView(val type: Type) : HtmlBuilderView() {
         }
         br{
 
+        }
+        div(classes="white-text") {
+            +"""Icons feitos por """
+            a(classes="white-text") {
+                href = "https://www.flaticon.com/authors/freepik"
+                title = "Freepik"
+                +""" Freepik"""
+            }
+            +""" de """
+            a(classes="white-text") {
+                href = "https://www.flaticon.com/"
+                title = "Flaticon"
+                +"""www.flaticon.com"""
+            }
         }
         p("center-align bold white-text") { +"© Share. Todos os direitos reservados." }
         /*Editado pela Braca*/
