@@ -37,6 +37,14 @@
     height: 32px;
 }
 
+.img-fb{
+    background-image: url(../img/icon/fbm.png);
+}
+
 .img-wpp {
     background-image: url(../img/icon/wpp.png);
+}
+
+.img-ln{
+    background-image: url(../img/icon/lnm.png);
 }
